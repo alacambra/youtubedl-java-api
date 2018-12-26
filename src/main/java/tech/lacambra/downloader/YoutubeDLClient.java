@@ -10,8 +10,10 @@ import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class YoutubeDLRx {
+public class YoutubeDLClient {
 
   private String command;
   private Pattern p = Pattern.compile("\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA (?<minutes>\\d+):(?<seconds>\\d+)");
@@ -20,18 +22,15 @@ public class YoutubeDLRx {
   private static final String GROUP_SECONDS = "seconds";
 
 
-  public YoutubeDLRx() {
-    String o = new OptionBuilder()
-        .extractAudio()
-        .audioQuality(AudioOption.Quality.q128K)
-        .audioFormat(AudioOption.Format.mp3)
-        .build();
-
-    command = "youtube-dl " + o + " https://www.youtube.com/watch?v=BbrfdBFpjac";
+  public YoutubeDLClient() {
   }
 
-  public Flowable<ProgressStep> execute() {
+  public OptionBuilder options() {
+    return new OptionBuilder(this);
+  }
 
+  public Flowable<ProgressStep> execute(String opts, String target) {
+    command = Stream.of("youtube-dl ", opts, target).collect(Collectors.joining());
     return Flowable.create(this::emit, BackpressureStrategy.BUFFER);
   }
 
@@ -84,12 +83,18 @@ public class YoutubeDLRx {
   public static void main(String[] args) {
 
     AtomicInteger i = new AtomicInteger(-100);
+    String target = " https://www.youtube.com/watch?v=BbrfdBFpjac";
 
-    Disposable d = new YoutubeDLRx().execute().subscribe(n -> {
-          n.getExitCode().ifPresent(i::set);
-          System.out.println(n);
-        }, System.err::println, () -> System.out.println("done: " + i)
-    );
+    Disposable d = new YoutubeDLClient().options().extractAudio()
+        .audioQuality(AudioOption.Quality.q128K)
+        .audioFormat(AudioOption.Format.mp3)
+        .execute(target)
+        .subscribe(n -> {
+              n.getExitCode().ifPresent(i::set);
+              System.out.println(n);
+            }, System.err::println, () -> System.out.println("done: " + i)
+        );
+
     d.dispose();
   }
 }

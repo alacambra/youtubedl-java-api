@@ -1,5 +1,7 @@
 package tech.lacambra.downloader;
 
+import io.reactivex.Flowable;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +10,10 @@ import java.util.stream.Collectors;
 public class OptionBuilder {
 
   private List<CmdOption> options;
+  private YoutubeDLClient client;
 
-  public OptionBuilder() {
+  public OptionBuilder(YoutubeDLClient client) {
+    this.client = client;
     options = new ArrayList<>();
   }
 
@@ -35,5 +39,10 @@ public class OptionBuilder {
 
   public String build() {
     return options.stream().map(CmdOption::toString).collect(Collectors.joining(" "));
+  }
+
+  public Flowable<ProgressStep> execute(String target) {
+    String opts = options.stream().map(CmdOption::toString).collect(Collectors.joining(" "));
+    return client.execute(opts, target);
   }
 }
