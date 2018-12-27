@@ -1,5 +1,7 @@
-package tech.lacambra.downloader;
+package downloader;
 
+import downloader.tech.lacambra.downloader.client.AudioOption;
+import downloader.tech.lacambra.downloader.client.OptionBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package tech.lacambra.downloader;
+package downloader.tech.lacambra.downloader.client;
 
 import java.time.format.DateTimeFormatter;
 

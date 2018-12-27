@@ -6,25 +6,23 @@
 
     <groupId>tech.lacambra</groupId>
     <artifactId>downloader</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>downloader-api</module>
+        <module>downloader-server</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>io.reactivex.rxjava2</groupId>
-            <artifactId>rxjava</artifactId>
-            <version>2.2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.3.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
+    <distributionManagement>
+        <repository>
+            <id>ArtifactoryLacambraDe</id>
+            <name>artifactory.lacambra.de</name>
+            <url>https://jfrog.lacambra.tech/artifactory/lacambra.tech/</url>
+        </repository>
+    </distributionManagement>
 </project>

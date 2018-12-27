@@ -1,4 +1,4 @@
-package tech.lacambra.downloader;
+package downloader.tech.lacambra.downloader.client;
 
 import io.reactivex.Flowable;
 

@@ -1,5 +1,8 @@
-package tech.lacambra.downloader;
+package downloader;
 
+import downloader.tech.lacambra.downloader.client.AudioOption;
+import downloader.tech.lacambra.downloader.client.ProgressStep;
+import downloader.tech.lacambra.downloader.client.YoutubeDLClient;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
