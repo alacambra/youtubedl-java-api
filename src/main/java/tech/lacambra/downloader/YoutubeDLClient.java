@@ -3,15 +3,12 @@ package tech.lacambra.downloader;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Emitter;
 import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class YoutubeDLClient {
 
@@ -30,16 +27,28 @@ public class YoutubeDLClient {
   }
 
   public Flowable<ProgressStep> execute(String opts, String target) {
-    command = Stream.of("youtube-dl ", opts, target).collect(Collectors.joining());
-    return Flowable.create(this::emit, BackpressureStrategy.BUFFER);
+    command = String.join("", "youtube-dl ", opts, target);
+    return Flowable
+        .create(this::emit, BackpressureStrategy.BUFFER)
+        .subscribeOn(Schedulers.io())
+        .share()
+        ;
   }
 
   private void emit(Emitter<ProgressStep> emitter) {
     try {
+      System.out.println("Running command:" + command);
       Process p = Runtime.getRuntime().exec(command);
 
       InputStream is = p.getInputStream();
       run(is, (line, progress, etaInSeconds) -> emitter.onNext(new ProgressStep(line, progress, etaInSeconds, null)));
+      run(p.getErrorStream(), (line, progress, etaInSeconds) -> emitter.onNext(new ProgressStep(line, progress, etaInSeconds, null)));
+      try {
+        p.waitFor();
+      } catch (InterruptedException e) {
+        emitter.onError(e);
+        return;
+      }
       emitter.onNext(new ProgressStep("done", 100, 0, p.exitValue()));
       emitter.onComplete();
 
@@ -78,23 +87,5 @@ public class YoutubeDLClient {
 
   private int convertToSeconds(String minutes, String seconds) {
     return Integer.parseInt(minutes) * 60 + Integer.parseInt(seconds);
-  }
-
-  public static void main(String[] args) {
-
-    AtomicInteger i = new AtomicInteger(-100);
-    String target = " https://www.youtube.com/watch?v=BbrfdBFpjac";
-
-    Disposable d = new YoutubeDLClient().options().extractAudio()
-        .audioQuality(AudioOption.Quality.q128K)
-        .audioFormat(AudioOption.Format.mp3)
-        .execute(target)
-        .subscribe(n -> {
-              n.getExitCode().ifPresent(i::set);
-              System.out.println(n);
-            }, System.err::println, () -> System.out.println("done: " + i)
-        );
-
-    d.dispose();
   }
 }
