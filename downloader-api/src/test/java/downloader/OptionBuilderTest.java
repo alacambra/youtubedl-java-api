@@ -22,7 +22,7 @@ class OptionBuilderTest {
 
     String opts = cut
         .afterDate(LocalDate.of(2018, 10, 23))
-        .extractAudio()
+        .extractAudio(true)
         .audioFormat(AudioOption.Format.mp3)
         .audioQuality(AudioOption.Quality.q128K)
         .build();

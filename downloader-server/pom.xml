@@ -23,6 +23,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>tech.lacambra.downloader</groupId>
+            <artifactId>downloader-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>8.0</version>
@@ -34,7 +39,17 @@
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+
     </dependencies>
+
+    <build>
+        <finalName>downloader</finalName>
+    </build>
 
 
 </project>

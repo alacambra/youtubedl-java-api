@@ -17,12 +17,12 @@ class YoutubeDLClientIT {
   void downloadTest() throws InterruptedException {
 
     AtomicInteger i = new AtomicInteger(-100);
-    String target = " https://www.youtube.com/watch?v=BbrfdBFpjac";
+    String target = " https://www.youtube.com/watch?v=la4zh4QjO00&feature=youtu.be";
     CountDownLatch latch = new CountDownLatch(1);
 
     Flowable<ProgressStep> progress = new YoutubeDLClient()
         .options()
-        .extractAudio()
+        .extractAudio(true)
         .audioQuality(AudioOption.Quality.q128K)
         .audioFormat(AudioOption.Format.mp3)
         .execute(target)

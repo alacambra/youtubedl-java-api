@@ -17,8 +17,12 @@ public class OptionBuilder {
     options = new ArrayList<>();
   }
 
-  public OptionBuilder extractAudio() {
-    options.add(new CmdOption("--extract-audio", ""));
+  public OptionBuilder extractAudio(boolean extract) {
+
+    if(extract){
+      options.add(new CmdOption("--extract-audio", ""));
+    }
+
     return this;
   }
 
