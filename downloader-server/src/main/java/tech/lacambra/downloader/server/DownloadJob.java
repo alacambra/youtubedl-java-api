@@ -7,6 +7,7 @@ public class DownloadJob {
 
   private String id;
   private DownloadResult result;
+  private String target;
 
   private Disposable disposable;
 

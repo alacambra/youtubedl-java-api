@@ -2,6 +2,7 @@ package tech.lacambra.downloader.server;
 
 import downloader.tech.lacambra.downloader.client.YoutubeDLClient;
 import io.reactivex.disposables.Disposable;
+import tech.lacambra.downloader.server.transfer.ScpClient;
 import tech.lacambra.downloader.server.view.DownloadJobInfo;
 import tech.lacambra.downloader.server.view.DownloadResult;
 
@@ -23,6 +24,9 @@ public class DownloadService {
 
   @Inject
   YoutubeDLClient dlClient;
+
+  @Inject
+  ScpClient scpClient;
 
   public String beginDownloadJob(DownloadJobInfo jobInfo) {
 

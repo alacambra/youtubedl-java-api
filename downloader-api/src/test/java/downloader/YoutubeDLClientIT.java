@@ -43,10 +43,35 @@ class YoutubeDLClientIT {
     latch.await();
     d1.dispose();
     d2.dispose();
+
+    sleep(10000);
+  }
+
+  private static void sleep(int millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private void countDown(CountDownLatch latch) {
     System.out.println("counting down: " + latch.getCount());
     latch.countDown();
+  }
+
+  @Test
+  public void getNameTest() throws InterruptedException {
+//    String target = " https://www.youtube.com/watch?v=la4zh4QjO00&feature=youtu.be";
+    String target = "https://www.youtube.com/playlist?list=PLYgCn1ybbmZqoy-vBLWKJ5aJdv28umH72";
+    CountDownLatch latch = new CountDownLatch(1);
+    new YoutubeDLClient()
+        .options().getFileName().execute(target)
+        .subscribe(progressStep -> {
+          System.out.println(progressStep);
+          System.out.println(progressStep.getLine());
+        }, System.err::println, latch::countDown);
+
+    latch.await();
   }
 }

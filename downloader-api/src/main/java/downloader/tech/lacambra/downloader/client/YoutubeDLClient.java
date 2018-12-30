@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class YoutubeDLClient {
 
+  public static final String TARGET_FOLDER = "/Users/albertlacambra/Downloads/esther/";
   private String command;
   private Pattern p = Pattern.compile("\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA (?<minutes>\\d+):(?<seconds>\\d+)");
   private static final String GROUP_PERCENT = "percent";
@@ -26,8 +27,10 @@ public class YoutubeDLClient {
     return new OptionBuilder(this);
   }
 
+  String o = " -o " + TARGET_FOLDER + "%(title)s.%(ext)s";
+
   public Flowable<ProgressStep> execute(String opts, String target) {
-    command = String.join("", "youtube-dl ", opts, target);
+    command = String.join("", "youtube-dl ", o, opts, target);
     return Flowable
         .create(this::emit, BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io())
@@ -71,9 +74,11 @@ public class YoutubeDLClient {
         }
         currentLine.append((char) nextChar);
       }
+      callback.onProgressUpdate(currentLine.toString(), -1, 0);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+
   }
 
   private void processOutputLine(String line, ProgressCallback callback) {

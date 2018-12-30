@@ -19,7 +19,7 @@ public class OptionBuilder {
 
   public OptionBuilder extractAudio(boolean extract) {
 
-    if(extract){
+    if (extract) {
       options.add(new CmdOption("--extract-audio", ""));
     }
 
@@ -40,6 +40,12 @@ public class OptionBuilder {
     options.add(new CmdOption("--dateafter", date.toString()));
     return this;
   }
+
+  public OptionBuilder getFileName() {
+    options.add(new CmdOption("--get-filename", ""));
+    return this;
+  }
+
 
   public String build() {
     return options.stream().map(CmdOption::toString).collect(Collectors.joining(" "));
