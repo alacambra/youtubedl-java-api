@@ -6,7 +6,6 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import java.io.*;
-import java.util.Properties;
 
 public class ScpClient {
 
@@ -17,22 +16,14 @@ public class ScpClient {
   private String privateKeyPassphrase;
 
   private int port;
-  private static String lfile = "/Users/albertlacambra/dev/servers/wildfly-14.0.1.Final/standalone/configuration/standalone.xml";
-  private static String rfile = "/var/services/homes/alacambra/removeme.xml";
+
 
   public static void main(String[] args) throws IOException {
-    Properties p = new Properties();
-    p.load(ScpClient.class.getClassLoader().getResourceAsStream("ssh-params.properties"));
 
-    ScpClient scpClient = new ScpClient(
-        new JSch(),
-        p.getProperty("username"),
-        p.getProperty("host"),
-        Integer.parseInt(p.getProperty("port")),
-        p.getProperty("privateKeyPath"),
-        p.getProperty("privateKeyPassphrase")
-    );
+    String lfile = "/Users/albertlacambra/dev/servers/wildfly-14.0.1.Final/standalone/configuration/standalone.xml";
+    String rfile = "/var/services/homes/alacambra/removeme.xml";
 
+    ScpClient scpClient = new ScpClientProducer().getScpClient();
     scpClient.copy(lfile, rfile);
   }
 
@@ -121,14 +112,15 @@ public class ScpClient {
   }
 
   private String createSendFileCommand(File localFile) {
+    String fileName = localFile.getName();
     long filesize = localFile.length();
     String fileCommingFlag = "C";
     String targetPermissions = "0644";
     String command = fileCommingFlag + targetPermissions + " " + filesize + " ";
-    if (this.lfile.lastIndexOf('/') > 0) {
-      command += this.lfile.substring(this.lfile.lastIndexOf('/') + 1);
+    if (fileName.lastIndexOf('/') > 0) {
+      command += fileName.substring(fileName.lastIndexOf('/') + 1);
     } else {
-      command += this.lfile;
+      command += fileName;
     }
     command += "\n";
 
