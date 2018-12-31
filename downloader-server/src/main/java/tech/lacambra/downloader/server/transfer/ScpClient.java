@@ -9,6 +9,7 @@ import java.io.*;
 
 public class ScpClient {
 
+  private final Session session;
   private JSch jsch;
   private String user;
   private String host;
@@ -21,10 +22,15 @@ public class ScpClient {
   public static void main(String[] args) throws IOException {
 
     String lfile = "/Users/albertlacambra/dev/servers/wildfly-14.0.1.Final/standalone/configuration/standalone.xml";
-    String rfile = "/var/services/homes/alacambra/removeme.xml";
+    String rfile = "/var/services/homes/alacambra/test-folder/removeme.xml";
 
     ScpClient scpClient = new ScpClientProducer().getScpClient();
     scpClient.copy(lfile, rfile);
+    scpClient.copy(lfile, rfile + 1);
+    scpClient.copy(lfile, rfile + 2);
+    scpClient.copy(lfile, rfile + 3);
+
+    scpClient.disconnect();
   }
 
   public ScpClient(JSch jsch, String user, String host, int port, String privateKeyPath, String privateKeyPassphrase) {
@@ -34,12 +40,15 @@ public class ScpClient {
     this.privateKeyPath = privateKeyPath;
     this.privateKeyPassphrase = privateKeyPassphrase;
     this.port = port;
+
+    session = createSession(jsch);
+
   }
 
   public void copy(String localSource, String remoteTarget) {
-    Session session = createSession(jsch);
     ChannelExec channel = createChannel(session);
     String cmd = createScpCommand(prepareRemotePath(remoteTarget));
+    System.out.println("Setting command to channel: " + cmd);
     channel.setCommand(cmd);
     try {
       channel.connect();
@@ -58,10 +67,13 @@ public class ScpClient {
       throw new RuntimeException(e);
     } finally {
       channel.disconnect();
-      session.disconnect();
     }
 
     System.out.println("Done");
+  }
+
+  public void disconnect() {
+    session.disconnect();
   }
 
   private Session createSession(JSch jsch) {
@@ -70,7 +82,6 @@ public class ScpClient {
       jsch.addIdentity(privateKeyPath, privateKeyPassphrase);
       session = jsch.getSession(user, host, port);
 
-//      session.setPassword(password);
       session.setConfig("StrictHostKeyChecking", "no");
       session.connect();
       System.out.println("Connection established.");

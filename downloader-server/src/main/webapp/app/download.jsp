@@ -22,7 +22,7 @@
         <button type="submit">Send</button>
     </form>
 </div>
-<div>result: ${downloadResult.exitCode}</div>
 <script src="/downloader/app/js/app.js"></script>
+<h3><a target="_blank" href="${jobId.location}">Your download: ${jobId.id}</a></h3>
 </body>
 </html>

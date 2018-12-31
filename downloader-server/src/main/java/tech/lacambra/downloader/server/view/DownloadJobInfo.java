@@ -12,18 +12,19 @@ public class DownloadJobInfo {
 
   @FormParam("extractAudio")
   @NotNull
-  private boolean extractAudio;
+  private String extractAudio;
 
-  private boolean isExtractAudio() {
+
+  public String getExtractAudio() {
     return extractAudio;
   }
 
-  public void setExtractAudio(boolean extractAudio) {
+  public boolean isAudio(){
+    return "on".equals(extractAudio);
+  }
+
+  public void setExtractAudio(String extractAudio) {
     this.extractAudio = extractAudio;
-  }
-
-  public boolean getExtractAudio() {
-    return extractAudio;
   }
 
   public String getUrl() {

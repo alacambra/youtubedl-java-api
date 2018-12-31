@@ -21,6 +21,7 @@ public class OptionBuilder {
 
     if (extract) {
       options.add(new CmdOption("--extract-audio", ""));
+      audioFormat(AudioOption.Format.mp3);
     }
 
     return this;
@@ -51,8 +52,8 @@ public class OptionBuilder {
     return options.stream().map(CmdOption::toString).collect(Collectors.joining(" "));
   }
 
-  public Flowable<ProgressStep> execute(String target) {
-    String opts = options.stream().map(CmdOption::toString).collect(Collectors.joining(" "));
-    return client.execute(opts, target);
+  public Flowable<ProgressStep> execute(String target, String localDest) {
+    String opts = options.stream().map(CmdOption::toString).collect(Collectors.joining(" ")) + " ";
+    return client.execute(opts, target, localDest);
   }
 }

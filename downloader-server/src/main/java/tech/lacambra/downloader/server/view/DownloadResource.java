@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import javax.json.JsonObject;
 import javax.mvc.Controller;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 import java.util.logging.Logger;
 
 @Path("download")
@@ -21,15 +23,31 @@ public class DownloadResource {
   @Inject
   JobId jobId;
 
+  @Context
+  UriInfo uriInfo;
+
+
+  @GET
+  @Controller
+  public String downloadVideo() {
+    LOGGER.info("[downloadVideo] dlClient=" + downloadService);
+
+    return "/app/download.jsp";
+  }
+
   @POST
   @Controller
   public String getVideo(@BeanParam DownloadJobInfo jobInfo) {
     LOGGER.info("[getVideo] received job info " + jobInfo);
 
     String id = downloadService.beginDownloadJob(jobInfo);
-    jobId.setId(id);
 
-    return "/app/download-progress.jsp";
+    jobId.setId(id);
+    String l = uriInfo.getRequestUriBuilder().path("job/{id}").resolveTemplate("id", id).build().toString();
+    jobId.setLocation(l);
+    System.out.println(jobId);
+
+    return "/app/download.jsp";
   }
 
   @GET

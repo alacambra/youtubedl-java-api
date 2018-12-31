@@ -25,7 +25,7 @@ class YoutubeDLClientIT {
         .extractAudio(true)
         .audioQuality(AudioOption.Quality.q128K)
         .audioFormat(AudioOption.Format.mp3)
-        .execute(target)
+        .execute(target, YoutubeDLClient.TARGET_FOLDER)
         .observeOn(Schedulers.computation());
 
     Disposable d2 = progress
@@ -66,7 +66,7 @@ class YoutubeDLClientIT {
     String target = "https://www.youtube.com/playlist?list=PLYgCn1ybbmZqoy-vBLWKJ5aJdv28umH72";
     CountDownLatch latch = new CountDownLatch(1);
     new YoutubeDLClient()
-        .options().getFileName().execute(target)
+        .options().getFileName().execute(target, YoutubeDLClient.TARGET_FOLDER)
         .subscribe(progressStep -> {
           System.out.println(progressStep);
           System.out.println(progressStep.getLine());
