@@ -1,10 +1,16 @@
 package tech.lacambra.downloader.server.view;
 
 
+import tech.lacambra.downloader.server.TransferProperties;
+
+import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
 
 public class DownloadJobInfo {
+
+  @Inject
+  TransferProperties transferProperties;
 
   @FormParam("url")
   @NotNull
@@ -19,7 +25,7 @@ public class DownloadJobInfo {
     return extractAudio;
   }
 
-  public boolean isAudio(){
+  public boolean isAudio() {
     return "on".equals(extractAudio);
   }
 
@@ -35,11 +41,16 @@ public class DownloadJobInfo {
     this.url = url;
   }
 
+  public TransferProperties getTransferProperties() {
+    return transferProperties;
+  }
+
   @Override
   public String toString() {
     return "DownloadJobInfo{" +
-        "url='" + url + '\'' +
-        ", extractAudio=" + extractAudio +
+        "transferProperties=" + transferProperties +
+        ", url='" + url + '\'' +
+        ", extractAudio='" + extractAudio + '\'' +
         '}';
   }
 }

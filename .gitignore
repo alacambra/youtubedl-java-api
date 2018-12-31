@@ -3,3 +3,4 @@
 **/.idea
 **/*.mp3
 ssh-params.properties
+transfer.properties

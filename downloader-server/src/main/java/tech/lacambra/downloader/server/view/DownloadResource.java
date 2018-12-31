@@ -19,13 +19,11 @@ public class DownloadResource {
   @Inject
   DownloadService downloadService;
 
-
   @Inject
   JobId jobId;
 
   @Context
   UriInfo uriInfo;
-
 
   @GET
   @Controller
@@ -53,7 +51,7 @@ public class DownloadResource {
   @GET
   @Path("job/{id}")
   public JsonObject getJob(@PathParam("id") String id) {
-    DownloadResult result = downloadService.getDownloadJob(id).map(DownloadJob::getResult).orElse(new DownloadResult());
+    DownloadResult result = downloadService.getDownloadJob(id).map(DownloadJob::getResult).orElse(new DownloadResult(-9999, false, 0f, "NOT_FOUND"));
     System.out.println("got job:" + result.getJson());
     return result.getJson();
   }

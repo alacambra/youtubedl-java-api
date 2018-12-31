@@ -14,11 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
 @Singleton
 public class DownloadService {
@@ -39,7 +37,7 @@ public class DownloadService {
 
 
     String id = UUID.randomUUID().toString();
-    Path path = Paths.get(YoutubeDLClient.TARGET_FOLDER).resolve(id);
+    Path path = Paths.get(jobInfo.getTransferProperties().getSource()).resolve(id);
     try {
       path = Files.createDirectory(path);
     } catch (IOException e) {
@@ -53,8 +51,10 @@ public class DownloadService {
         .subscribe(progressStep -> {
 
           DownloadJob job = downloads.get(id);
-          Disposable disposable = job.getDisposable();
-          progressStep.getExitCode().ifPresent(code -> downloads.put(id, new DownloadJob(id, new DownloadResult(code), disposable, job.getTargetFolder())));
+          progressStep
+              .getExitCode()
+              .map(code -> downloads.put(id, cloneForDone(code, job)))
+              .orElseGet(() -> downloads.put(id, cloneForDLInProgress(-9999, progressStep.getProgress(), job)));
 
         }, System.err::println, () -> {
 
@@ -66,10 +66,18 @@ public class DownloadService {
           }
 
           File f = new File(job.getTargetFolder());
-          Stream.of(Objects.requireNonNull(f.listFiles())).forEach(file -> {
-            scpClient.copy(file.getAbsolutePath(), "/var/services/homes/alacambra/test-folder/" + file.getName());
-          });
+          File[] files = f.listFiles();
 
+          if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+              File file = files[i];
+              downloads.put(id, cloneForTXInProgress(-9999, (float) i / files.length, job));
+              String t = jobInfo.isAudio() ? jobInfo.getTransferProperties().getTargetAudio() : jobInfo.getTransferProperties().getTargetVideo();
+              scpClient.copy(file.getAbsolutePath(), t + file.getName());
+            }
+          }
+
+          downloads.put(id, cloneForDone(0, job));
           Disposable disposable = job.getDisposable();
           disposable.dispose();
         });
@@ -77,6 +85,30 @@ public class DownloadService {
     DownloadJob job = new DownloadJob(id, null, d, path.toString());
     downloads.put(id, job);
     return id;
+  }
+
+  private DownloadJob cloneForDone(int code, DownloadJob job) {
+    return new DownloadJob(job.getId(),
+        new DownloadResult(code, true, 100.0f, "DONE"),
+        job.getDisposable(),
+        job.getTargetFolder()
+    );
+  }
+
+  private DownloadJob cloneForDLInProgress(int code, float progress, DownloadJob job) {
+    return new DownloadJob(job.getId(),
+        new DownloadResult(code, false, progress, "DL_IN_PROGRESS"),
+        job.getDisposable(),
+        job.getTargetFolder()
+    );
+  }
+
+  private DownloadJob cloneForTXInProgress(int code, float progress, DownloadJob job) {
+    return new DownloadJob(job.getId(),
+        new DownloadResult(code, false, progress, "TX_IN_PROGRESS"),
+        job.getDisposable(),
+        job.getTargetFolder()
+    );
   }
 
   public Optional<DownloadJob> getDownloadJob(String id) {

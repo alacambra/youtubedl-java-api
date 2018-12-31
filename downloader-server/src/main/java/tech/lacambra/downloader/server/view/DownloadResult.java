@@ -7,14 +7,14 @@ public class DownloadResult {
 
   private Integer exitCode;
   private boolean done;
+  private Float progress;
+  private String status;
 
-  public DownloadResult() {
-    this.done = false;
-  }
-
-  public DownloadResult(Integer exitCode) {
+  public DownloadResult(Integer exitCode, boolean done, Float progress, String status) {
     this.exitCode = exitCode;
-    done = true;
+    this.done = done;
+    this.progress = progress;
+    this.status = status;
   }
 
   public Integer getExitCode() {
@@ -28,6 +28,8 @@ public class DownloadResult {
     return Json.createObjectBuilder()
         .add("exitCode", exitCode)
         .add("done", done)
+        .add("downloadProgress", progress)
+        .add("status", status)
         .build();
   }
 
@@ -35,4 +37,13 @@ public class DownloadResult {
     return done;
   }
 
+  @Override
+  public String toString() {
+    return "DownloadResult{" +
+        "exitCode=" + exitCode +
+        ", done=" + done +
+        ", progress=" + progress +
+        ", status='" + status + '\'' +
+        '}';
+  }
 }

@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -7,10 +8,6 @@
 <h1>${helloHelper.message}</h1>
 <script>
     console.info("assigning data");
-
-    <%--var jobId =--%>
-        <%--${downloadResult.json.toString()};--%>
-
 </script>
 <div>
     <form method="POST" action="">
@@ -23,6 +20,9 @@
     </form>
 </div>
 <script src="/downloader/app/js/app.js"></script>
-<h3><a target="_blank" href="${jobId.location}">Your download: ${jobId.id}</a></h3>
+
+<c:if test="${jobId.id!= null}">
+    <h3><a target="_blank" href="${jobId.location}">Your download job: ${jobId.id}</a></h3>
+</c:if>
 </body>
 </html>
