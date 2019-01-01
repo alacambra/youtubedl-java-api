@@ -1,7 +1,6 @@
 package tech.lacambra.downloader.server.transfer;
 
 import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
@@ -10,13 +9,6 @@ import java.io.*;
 public class ScpClient {
 
   private final Session session;
-  private JSch jsch;
-  private String user;
-  private String host;
-  private String privateKeyPath;
-  private String privateKeyPassphrase;
-
-  private int port;
 
 
   public static void main(String[] args) throws IOException {
@@ -24,25 +16,24 @@ public class ScpClient {
     String lfile = "/Users/albertlacambra/dev/servers/wildfly-14.0.1.Final/standalone/configuration/standalone.xml";
     String rfile = "/var/services/homes/alacambra/test-folder/removeme.xml";
 
-    ScpClient scpClient = new ScpClientProducer().getScpClient();
-    scpClient.copy(lfile, rfile);
-    scpClient.copy(lfile, rfile + 1);
-    scpClient.copy(lfile, rfile + 2);
-    scpClient.copy(lfile, rfile + 3);
+    SshToolsProducer sshToolsProducer = new SshToolsProducer();
+    sshToolsProducer.sessionFactory = new JSchSessionFactory();
+    Session session = sshToolsProducer.getSession();
+    ScpClient scpClient = sshToolsProducer.getScpClient(session);
+//    scpClient.copy(lfile, rfile);
+//    scpClient.copy(lfile, rfile + 1);
+//    scpClient.copy(lfile, rfile + 2);
+//    scpClient.copy(lfile, rfile + 3);
+
+    SftpClient sftpClient = new SftpClient(session);
+    sftpClient.createDir("/var/services/homes/alacambra/test-folder/test1");
 
     scpClient.disconnect();
+    session.disconnect();
   }
 
-  public ScpClient(JSch jsch, String user, String host, int port, String privateKeyPath, String privateKeyPassphrase) {
-    this.jsch = jsch;
-    this.user = user;
-    this.host = host;
-    this.privateKeyPath = privateKeyPath;
-    this.privateKeyPassphrase = privateKeyPassphrase;
-    this.port = port;
-
-    session = createSession(jsch);
-
+  public ScpClient(Session session) {
+    this.session = session;
   }
 
   public void copy(String localSource, String remoteTarget) {
@@ -74,24 +65,6 @@ public class ScpClient {
 
   public void disconnect() {
     session.disconnect();
-  }
-
-  private Session createSession(JSch jsch) {
-    Session session = null;
-    try {
-      jsch.addIdentity(privateKeyPath, privateKeyPassphrase);
-      session = jsch.getSession(user, host, port);
-
-      session.setConfig("StrictHostKeyChecking", "no");
-      session.connect();
-      System.out.println("Connection established.");
-
-    } catch (JSchException e) {
-      throw new RuntimeException(e);
-    }
-
-
-    return session;
   }
 
   private ChannelExec createChannel(Session session) {

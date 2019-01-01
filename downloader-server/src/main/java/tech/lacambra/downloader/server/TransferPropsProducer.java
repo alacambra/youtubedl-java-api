@@ -12,7 +12,7 @@ public class TransferPropsProducer {
   @Produces
   public TransferProperties getTransferProperties() throws IOException {
 
-    BufferedReader reader = Files.newBufferedReader(Paths.get(System.getenv("transfer.properties")));
+    BufferedReader reader = Files.newBufferedReader(Paths.get(System.getenv("DOWNLOADER_TRANSFER_PROPERTIES")));
 
     Properties properties = new Properties();
     properties.load(reader);
