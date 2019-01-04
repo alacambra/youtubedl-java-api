@@ -1,0 +1,54 @@
+#!/usr/bin/env groovy
+
+pipeline {
+    agent any
+
+    stages {
+
+        stage('print-env'){
+            steps{
+                sh 'printenv'
+            }
+        }
+
+        stage('prepare'){
+            steps{
+                prepare()
+            }
+        }
+
+        stage('build-ut') {
+            steps{
+                buildUnitTest()
+            }
+        }
+    }
+}
+
+def prepare() {
+    checkoutGitRepos()
+}
+
+def checkoutGitRepos() {
+    checkout([
+            $class                           : 'GitSCM',
+            branches                         : [[name: "refs/heads/master"]],
+            doGenerateSubmoduleConfigurations: false,
+            extensions                       : [
+                    [$class: 'RelativeTargetDirectory', relativeTargetDir: "code"],
+            ],
+            submoduleCfg                     : [],
+            userRemoteConfigs                : [[credentialsId: 'jenkins-github', url: "git@github.com:alacambra/jenkins-pipeline.git"]]
+    ])
+}
+
+def buildUnitTest() {
+    dir("code/downloader/downloader-server") {
+        def mvnHome = tool name: 'Maven3', type: 'maven'
+        sh "ls -la /etc/alternatives/java && ${mvnHome}/bin/mvn -B test package -DbuildNumber=b1"
+    }
+}
+
+def unitTestReports() {
+    junit 'code/sample-app/hello-app/target/surefire-reports/**/*.xml'
+}
