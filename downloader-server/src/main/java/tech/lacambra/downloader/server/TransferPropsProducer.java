@@ -17,11 +17,7 @@ public class TransferPropsProducer {
     Properties properties = new Properties();
     properties.load(reader);
 
-    return new TransferProperties(
-        properties.getProperty("source"),
-        properties.getProperty("target-audio"),
-        properties.getProperty("target-video")
-    );
+    return new TransferProperties(properties);
 
   }
 }

@@ -1,35 +1,31 @@
 package tech.lacambra.downloader.server;
 
+import java.util.Properties;
+
 public class TransferProperties {
 
-  private String source;
-  private String targetAudio;
-  private String targetVideo;
+  private Properties properties;
 
-  public TransferProperties(String source, String targetAudio, String targetVideo) {
-    this.source = source;
-    this.targetAudio = targetAudio;
-    this.targetVideo = targetVideo;
+  public TransferProperties(Properties properties) {
+    this.properties = properties;
   }
 
   public String getSource() {
-    return source;
+    return properties.getProperty("source");
   }
 
-  public String getTargetAudio() {
-    return targetAudio;
+  public String getTargetAudio(String owner) {
+    return properties.getProperty("target-audio-" + owner);
   }
 
-  public String getTargetVideo() {
-    return targetVideo;
+  public String getTargetVideo(String owner) {
+    return properties.getProperty("target-video-" + owner);
   }
 
   @Override
   public String toString() {
     return "TransferProperties{" +
-        "source='" + source + '\'' +
-        ", targetAudio='" + targetAudio + '\'' +
-        ", targetVideo='" + targetVideo + '\'' +
+        "properties=" + properties +
         '}';
   }
 }

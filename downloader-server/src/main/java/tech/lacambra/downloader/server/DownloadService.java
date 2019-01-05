@@ -33,11 +33,11 @@ public class DownloadService {
   @Inject
   ScpClient scpClient;
 
-  public String beginDownloadJob(DownloadJobInfo jobInfo) {
+  public String beginDownloadJob(DownloadJobInfo downloadJobInfo) {
 
 
     String id = UUID.randomUUID().toString();
-    Path path = Paths.get(jobInfo.getTransferProperties().getSource()).resolve(id);
+    Path path = Paths.get(downloadJobInfo.getTransferProperties().getSource()).resolve(id);
     try {
       path = Files.createDirectory(path);
     } catch (IOException e) {
@@ -46,8 +46,8 @@ public class DownloadService {
 
     Disposable d = dlClient
         .options()
-        .extractAudio(jobInfo.isAudio())
-        .execute(jobInfo.getUrl(), path.toString())
+        .extractAudio(downloadJobInfo.isAudio())
+        .execute(downloadJobInfo.getUrl(), path.toString())
         .subscribe(progressStep -> {
 
           DownloadJob job = downloads.get(id);
@@ -61,7 +61,7 @@ public class DownloadService {
           DownloadJob job = downloads.get(id);
 
           if (job.getResult().getExitCode() != 0) {
-            System.out.println("Error on download - " + job.getResult());
+            downloads.put(id, cloneForError(job.getResult().getExitCode(), job));
             return;
           }
 
@@ -72,7 +72,7 @@ public class DownloadService {
             for (int i = 0; i < files.length; i++) {
               File file = files[i];
               downloads.put(id, cloneForTXInProgress(-9999, (float) i / files.length, job));
-              String t = jobInfo.isAudio() ? jobInfo.getTransferProperties().getTargetAudio() : jobInfo.getTransferProperties().getTargetVideo();
+              String t = downloadJobInfo.isAudio() ? downloadJobInfo.getTransferProperties().getTargetAudio(downloadJobInfo.getOwner()) : downloadJobInfo.getTransferProperties().getTargetVideo(downloadJobInfo.getOwner());
               scpClient.copy(file.getAbsolutePath(), t + file.getName());
             }
           }
@@ -82,7 +82,7 @@ public class DownloadService {
           disposable.dispose();
         });
 
-    DownloadJob job = new DownloadJob(id, null, d, path.toString());
+    DownloadJob job = new DownloadJob(id, null, d, path.toString(), downloadJobInfo);
     downloads.put(id, job);
     return id;
   }
@@ -91,7 +91,17 @@ public class DownloadService {
     return new DownloadJob(job.getId(),
         new DownloadResult(code, true, 100.0f, "DONE"),
         job.getDisposable(),
-        job.getTargetFolder()
+        job.getTargetFolder(),
+        job.getDownloadJobInfo()
+    );
+  }
+
+  private DownloadJob cloneForError(int code, DownloadJob job) {
+    return new DownloadJob(job.getId(),
+        new DownloadResult(code, true, -1f, "ERROR"),
+        job.getDisposable(),
+        job.getTargetFolder(),
+        job.getDownloadJobInfo()
     );
   }
 
@@ -99,7 +109,8 @@ public class DownloadService {
     return new DownloadJob(job.getId(),
         new DownloadResult(code, false, progress, "DL_IN_PROGRESS"),
         job.getDisposable(),
-        job.getTargetFolder()
+        job.getTargetFolder(),
+        job.getDownloadJobInfo()
     );
   }
 
@@ -107,7 +118,8 @@ public class DownloadService {
     return new DownloadJob(job.getId(),
         new DownloadResult(code, false, progress, "TX_IN_PROGRESS"),
         job.getDisposable(),
-        job.getTargetFolder()
+        job.getTargetFolder(),
+        job.getDownloadJobInfo()
     );
   }
 

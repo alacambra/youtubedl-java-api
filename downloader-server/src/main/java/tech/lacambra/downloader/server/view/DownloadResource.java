@@ -42,6 +42,11 @@ public class DownloadResource {
 
     jobId.setId(id);
     String l = uriInfo.getRequestUriBuilder().path("job/{id}").resolveTemplate("id", id).build().toString();
+
+    if (l.contains("lacambra.tech") && !l.contains("https")) {
+      l = l.replace("http", "https");
+    }
+
     jobId.setLocation(l);
     System.out.println(jobId);
 

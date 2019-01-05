@@ -21,6 +21,11 @@ public class DownloadJobInfo {
   private String extractAudio;
 
 
+  @FormParam("owner")
+  @NotNull
+  private String owner;
+
+
   public String getExtractAudio() {
     return extractAudio;
   }
@@ -41,6 +46,14 @@ public class DownloadJobInfo {
     this.url = url;
   }
 
+  public String getOwner() {
+    return owner;
+  }
+
+  public void setOwner(String owner) {
+    this.owner = owner;
+  }
+
   public TransferProperties getTransferProperties() {
     return transferProperties;
   }
@@ -51,6 +64,7 @@ public class DownloadJobInfo {
         "transferProperties=" + transferProperties +
         ", url='" + url + '\'' +
         ", extractAudio='" + extractAudio + '\'' +
+        ", owner='" + owner + '\'' +
         '}';
   }
 }

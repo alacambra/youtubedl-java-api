@@ -3,5 +3,6 @@
 **/.idea
 **/*.mp3
 **/*.war
+**/*.versionsBackup
 ssh-params.properties
 transfer.properties
