@@ -1,2 +1,2 @@
 FROM airhacks/wildfly
-COPY download.war ${DEPLOYMENT_DIR}
+COPY downloader.war ${DEPLOYMENT_DIR}
