@@ -8,7 +8,7 @@ RUN yum update -y
 RUN rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro
 RUN rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm
 RUN yum install ffmpeg ffmpeg-devel -y
-#USER serveradmin
+USER serveradmin
 RUN mkdir -p /opt/downloder/jobs/
 ENV PATH="/opt/downloder/bin:${PATH}"
 ENV DOWNLOADER_SSH_PROPERTIES /opt/downloder/config/ssh-params.properties
