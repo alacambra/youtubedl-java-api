@@ -1,2 +1,3 @@
 FROM airhacks/wildfly
+ENV DOWNLOADER_TRANSFER_PROPERTIES /config/
 COPY downloader.war ${DEPLOYMENT_DIR}

@@ -7,4 +7,4 @@ echo
 docker build -t lacambra/downloader:${VERSION} ${DIR}/docker/
 docker stop downloader
 docker rm downloader
-docker run -d --name downloader -p 28080:8080 -p 28443:8443 lacambra/downloader:${VERSION}
+docker run -d --name downloader -v ${DOWNLOADER_DOCKER_CONFIG_PATH}:/config/ -p 28080:8080 -p 28443:8443 lacambra/downloader:${VERSION}
