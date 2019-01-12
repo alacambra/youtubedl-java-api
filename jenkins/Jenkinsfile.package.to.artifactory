@@ -7,23 +7,7 @@ pipeline {
     }
     stages {
 
-        stage ('Artifactory configuration') {
-            steps {
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
-                    serverId: "ArtifactoryLacambraTech",
-                    releaseRepo: "lacambra.tech",
-                    snapshotRepo: "lacambra.tech"
-                )
-
-                rtMavenResolver (
-                    id: "MAVEN_RESOLVER",
-                    serverId: "ArtifactoryLacambraTech",
-                    releaseRepo: "lacambra.tech",
-                    snapshotRepo: "lacambra.tech"
-                )
-            }
-        }
+      
 
         stage('Build') {
             steps {
