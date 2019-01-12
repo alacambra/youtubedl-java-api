@@ -7,11 +7,12 @@ pipeline {
     }
     stages {
 
-        stage('Build') {
-
+        stage('Checkout){
             checkout([$class: 'GitSCM', branches: [[name: ${COMMIT} ]],
                 userRemoteConfigs: [[url: 'https://github.com/alacambra/youtubedl-java-api']]])
+        }
 
+        stage('Build') {
             steps {
                 sh 'mvn -B clean compile'
             }
