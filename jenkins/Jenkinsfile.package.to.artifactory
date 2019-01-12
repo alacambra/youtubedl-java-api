@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout'){
             steps {
                 checkout scm: [
-                    $class: 'GitSCM', 
+                    $class: ['GitSCM'], 
                     branches:  'master',
                     userRemoteConfigs: [
                         url: 'https://github.com/alacambra/youtubedl-java-api'
