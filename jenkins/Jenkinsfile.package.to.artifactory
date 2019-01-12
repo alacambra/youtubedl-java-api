@@ -16,9 +16,9 @@ pipeline {
                 }
             }
             steps {
-                echo "Checking out, ${COMMIT}, nice to meet you."
+                echo "Checking out ${COMMIT}."
                 checkout ( [$class: 'GitSCM',
-                    branches: [[name: ${COMMIT} ]],
+                    branches: [[name: "${COMMIT}" ]],
                     userRemoteConfigs: [[
                         url: 'https://github.com/alacambra/youtubedl-java-api'
                     ]]
