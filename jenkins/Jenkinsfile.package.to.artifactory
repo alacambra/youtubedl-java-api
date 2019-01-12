@@ -8,13 +8,14 @@ pipeline {
     stages {
 
         stage('Checkout'){
-            steps {
-
-                parameterDefinitions: [
+            parameterDefinitions: [
                     parameters {
-                    string defaultValue: '', description: '', name: 'TEST', trim: false
+                        string defaultValue: '', description: '', name: 'TEST', trim: false
                     }
                 ]
+            steps {
+
+                
                 checkout ( [$class: 'GitSCM',
                     branches: [[name: '${COMMIT}' ]],
                     userRemoteConfigs: [[
