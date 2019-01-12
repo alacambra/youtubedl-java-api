@@ -9,14 +9,12 @@ pipeline {
 
         stage('Checkout'){
             steps {
-                script {
-                    // This step pauses Pipeline execution and allows the user to interact and control the flow of the build.
-                    // Only a basic "process" or "abort" option is provided in the stage view
-                    input message: '', ok: 'Proceed',
-                        parameters: [
-                            string defaultValue: '', description: '', name: 'TEST', trim: false
-                        ]
-                }
+
+                parameterDefinitions: [
+                    parameters {
+                    string defaultValue: '', description: '', name: 'TEST', trim: false
+                    }
+                ]
                 checkout ( [$class: 'GitSCM',
                     branches: [[name: '${COMMIT}' ]],
                     userRemoteConfigs: [[
