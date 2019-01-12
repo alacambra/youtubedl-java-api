@@ -16,6 +16,7 @@ pipeline {
                 }
             }
             steps {
+                echo "Checking out, ${COMMIT}, nice to meet you."
                 checkout ( [$class: 'GitSCM',
                     branches: [[name: '${COMMIT}' ]],
                     userRemoteConfigs: [[
