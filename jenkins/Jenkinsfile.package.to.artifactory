@@ -12,7 +12,10 @@ pipeline {
                 checkout scm: [
                     $class: 'GitSCM', 
                     branches:  ${COMMIT},
-                    userRemoteConfigs: [[url: 'https://github.com/alacambra/youtubedl-java-api']]])
+                    userRemoteConfigs: [
+                        url: 'https://github.com/alacambra/youtubedl-java-api'
+                    ]
+                ]
             }
         }
 
