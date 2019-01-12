@@ -11,7 +11,7 @@ pipeline {
             steps {
                 checkout scm: [
                     $class: 'GitSCM', 
-                    branches:  ${COMMIT},
+                    branches:  'master',
                     userRemoteConfigs: [
                         url: 'https://github.com/alacambra/youtubedl-java-api'
                     ]
