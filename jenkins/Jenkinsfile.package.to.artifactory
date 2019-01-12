@@ -8,8 +8,10 @@ pipeline {
     stages {
 
         stage('Checkout'){
-            checkout([$class: 'GitSCM', branches: [[name: ${COMMIT} ]],
-                userRemoteConfigs: [[url: 'https://github.com/alacambra/youtubedl-java-api']]])
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: ${COMMIT} ]],
+                    userRemoteConfigs: [[url: 'https://github.com/alacambra/youtubedl-java-api']]])
+            }
         }
 
         stage('Build') {
