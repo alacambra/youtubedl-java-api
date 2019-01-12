@@ -9,13 +9,12 @@ pipeline {
 
         stage('Checkout'){
             steps {
-                checkout scm: [
-                    $class: ['GitSCM'], 
-                    branches:  [name: ['master']],
-                    userRemoteConfigs: [
+                checkout ( [$class: 'GitSCM',
+                    branches: [[name: 'master' ]],
+                    userRemoteConfigs: [[
                         url: 'https://github.com/alacambra/youtubedl-java-api'
-                    ]
-                ]
+                    ]]
+                ])                
             }
         }
 
