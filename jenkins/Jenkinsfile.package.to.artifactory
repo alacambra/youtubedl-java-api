@@ -9,6 +9,9 @@ pipeline {
 
         stage('Checkout'){
             steps {
+                parameters {
+                   string defaultValue: '', description: '', name: 'TEST', trim: false
+                }
                 checkout ( [$class: 'GitSCM',
                     branches: [[name: '${COMMIT}' ]],
                     userRemoteConfigs: [[
