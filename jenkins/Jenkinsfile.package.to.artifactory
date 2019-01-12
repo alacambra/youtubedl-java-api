@@ -7,21 +7,22 @@ pipeline {
     }
     stages {
 
-        stage ('Artifactory configuration') {
+        stage('Checkout'){
+            input {
+                message "Tag, branch, commit?"
+                ok "Continue"
+                parameters {
+                    string(name: 'COMMIT', defaultValue: 'master', description: 'what should be shipped?')
+                }
+            }
             steps {
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
-                    serverId: "ArtifactoryLacambraTech",
-                    releaseRepo: "lacambra.tech",
-                    snapshotRepo: "lacambra.tech"
-                )
-
-                rtMavenResolver (
-                    id: "MAVEN_RESOLVER",
-                    serverId: "ArtifactoryLacambraTech",
-                    releaseRepo: "lacambra.tech",
-                    snapshotRepo: "lacambra.tech"
-                )
+                echo "Checking out ${COMMIT}."
+                checkout ( [$class: 'GitSCM',
+                    branches: [[name: "${COMMIT}" ]],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/alacambra/youtubedl-java-api'
+                    ]]
+                ])                
             }
         }
 
@@ -35,9 +36,16 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        stage('Deploy') {
+        stage('Ship') {
             steps {
-                sh 'mvn deploy'
+                withMaven(
+                    maven: 'M3',           
+                    mavenSettingsConfig: 'lacambra.tech-mvn-settings.xml',
+                    mavenLocalRepo: '.repository'
+                ){
+                    sh '$MVN_CMD deploy'
+                }
+                
             }
         }
     }

@@ -21,7 +21,7 @@
 
     <distributionManagement>
         <repository>
-            <id>ArtifactoryLacambraDe</id>
+            <id>ArtifactoryLacambraTech</id>
             <name>artifactory.lacambra.de</name>
             <url>https://jfrog.lacambra.tech/artifactory/lacambra.tech/</url>
         </repository>
