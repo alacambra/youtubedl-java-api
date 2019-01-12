@@ -45,7 +45,7 @@ pipeline {
                     mavenSettingsConfig: 'lacambra.tech-mvn-settings.xml',
                     mavenLocalRepo: '.repository'
                 ){
-                    sh 'mvn deploy'
+                    sh '$MVN_CMD deploy'
                 }
                 
             }
