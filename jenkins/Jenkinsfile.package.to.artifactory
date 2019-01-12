@@ -10,8 +10,7 @@ pipeline {
         stage('Checkout'){
             input {
                 message "Tag, branch, commit?"
-                ok "Yes, we should."
-                submitter "alice,bob"
+                ok "Continue"
                 parameters {
                     string(name: 'COMMIT', defaultValue: 'master', description: 'what should be shipped?')
                 }
