@@ -40,7 +40,7 @@ pipeline {
                 withMaven(
                     maven: 'M3',           
                     mavenSettingsConfig: 'lacambra.tech-mvn-settings.xml',
-                    mavenLocalRepo: '/root/.m2'
+                    mavenLocalRepo: '.repository'
                 ){
                     sh '$MVN_CMD deploy'
                 }
