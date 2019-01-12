@@ -17,7 +17,7 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        stage('Deploy') {
+        stage('Ship') {
             steps {
                 withMaven(
                     maven: 'M3',           
