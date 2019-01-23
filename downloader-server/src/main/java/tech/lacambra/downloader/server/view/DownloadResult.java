@@ -2,6 +2,7 @@ package tech.lacambra.downloader.server.view;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import java.util.Optional;
 
 public class DownloadResult {
 
@@ -9,12 +10,16 @@ public class DownloadResult {
   private boolean done;
   private Float progress;
   private String status;
+  private String line;
+  private DownloadJobInfo downloadJobInfo;
 
-  public DownloadResult(Integer exitCode, boolean done, Float progress, String status) {
+  public DownloadResult(Integer exitCode, boolean done, Float progress, String status, String line, DownloadJobInfo downloadJobInfo) {
     this.exitCode = exitCode;
     this.done = done;
     this.progress = progress;
     this.status = status;
+    this.line = line;
+    this.downloadJobInfo = Optional.ofNullable(downloadJobInfo).orElse(new DownloadJobInfo("", "", ""));
   }
 
   public Integer getExitCode() {
@@ -27,9 +32,11 @@ public class DownloadResult {
 
     return Json.createObjectBuilder()
         .add("exitCode", exitCode)
+        .add("line", line)
         .add("done", done)
         .add("downloadProgress", progress)
         .add("status", status)
+        .add("downloadJobInfo", downloadJobInfo.toJson())
         .build();
   }
 
@@ -42,6 +49,7 @@ public class DownloadResult {
     return "DownloadResult{" +
         "exitCode=" + exitCode +
         ", done=" + done +
+        ", line=" + line +
         ", progress=" + progress +
         ", status='" + status + '\'' +
         '}';

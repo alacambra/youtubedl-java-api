@@ -68,7 +68,8 @@ public class YoutubeDLClient {
       int nextChar;
       while ((nextChar = stream.read()) != -1) {
         if (nextChar == '\r' && callback != null) {
-          processOutputLine(currentLine.toString(), callback);
+//          processOutputLine(currentLine.toString(), callback);
+          callback.onProgressUpdate(currentLine.toString(), 0, 0);
           currentLine.setLength(0);
           continue;
         }

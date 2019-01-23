@@ -4,7 +4,9 @@ import tech.lacambra.downloader.server.DownloadJob;
 import tech.lacambra.downloader.server.DownloadService;
 
 import javax.inject.Inject;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.stream.JsonCollectors;
 import javax.mvc.Controller;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -56,8 +58,21 @@ public class DownloadResource {
   @GET
   @Path("job/{id}")
   public JsonObject getJob(@PathParam("id") String id) {
-    DownloadResult result = downloadService.getDownloadJob(id).map(DownloadJob::getResult).orElse(new DownloadResult(-9999, false, 0f, "NOT_FOUND"));
+    DownloadResult result = downloadService.getDownloadJob(id)
+        .map(DownloadJob::getResult)
+        .orElse(new DownloadResult(-9999, false, 0f, "NOT_FOUND", "",null));
     System.out.println("got job:" + result.getJson());
     return result.getJson();
+  }
+
+  @GET
+  @Path("job")
+  public JsonArray getJobs() {
+    return downloadService
+        .getDownloadJobs()
+        .stream()
+        .map(DownloadJob::getResult)
+        .map(DownloadResult::getJson)
+        .collect(JsonCollectors.toJsonArray());
   }
 }

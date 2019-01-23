@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
@@ -54,7 +52,7 @@ public class DownloadService {
           progressStep
               .getExitCode()
               .map(code -> downloads.put(id, cloneForDone(code, job)))
-              .orElseGet(() -> downloads.put(id, cloneForDLInProgress(-9999, progressStep.getProgress(), job)));
+              .orElseGet(() -> downloads.put(id, cloneForDLInProgress(-9999, progressStep.getProgress(), progressStep.getLine(), job)));
 
         }, System.err::println, () -> {
 
@@ -89,7 +87,7 @@ public class DownloadService {
 
   private DownloadJob cloneForDone(int code, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, true, 100.0f, "DONE"),
+        new DownloadResult(code, true, 100.0f, "DONE", "", job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()
@@ -98,16 +96,16 @@ public class DownloadService {
 
   private DownloadJob cloneForError(int code, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, true, -1f, "ERROR"),
+        new DownloadResult(code, true, -1f, "ERROR", "", job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()
     );
   }
 
-  private DownloadJob cloneForDLInProgress(int code, float progress, DownloadJob job) {
+  private DownloadJob cloneForDLInProgress(int code, float progress, String line, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, false, progress, "DL_IN_PROGRESS"),
+        new DownloadResult(code, false, progress, "DL_IN_PROGRESS", line, job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()
@@ -116,7 +114,7 @@ public class DownloadService {
 
   private DownloadJob cloneForTXInProgress(int code, float progress, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, false, progress, "TX_IN_PROGRESS"),
+        new DownloadResult(code, false, progress, "TX_IN_PROGRESS", "Copying....", job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()
@@ -125,5 +123,9 @@ public class DownloadService {
 
   public Optional<DownloadJob> getDownloadJob(String id) {
     return Optional.ofNullable(downloads.get(id));
+  }
+
+  public List<DownloadJob> getDownloadJobs() {
+    return new ArrayList<>(downloads.values());
   }
 }
