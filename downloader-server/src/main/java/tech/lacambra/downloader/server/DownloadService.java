@@ -1,5 +1,6 @@
 package tech.lacambra.downloader.server;
 
+import downloader.tech.lacambra.downloader.client.ProgressStep;
 import downloader.tech.lacambra.downloader.client.YoutubeDLClient;
 import io.reactivex.disposables.Disposable;
 import tech.lacambra.downloader.server.transfer.ScpClient;
@@ -127,5 +128,10 @@ public class DownloadService {
 
   public List<DownloadJob> getDownloadJobs() {
     return new ArrayList<>(downloads.values());
+  }
+
+  public List<String> update() {
+    System.out.println("updating....");
+    return dlClient.updateYoutubeDL().map(ProgressStep::getLine).toList().blockingGet();
   }
 }

@@ -1,8 +1,8 @@
 package downloader.tech.lacambra.downloader.client;
 
 import io.reactivex.BackpressureStrategy;
-import io.reactivex.Emitter;
 import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
 import io.reactivex.schedulers.Schedulers;
 
 import java.io.IOException;
@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 public class YoutubeDLClient {
 
   public static final String TARGET_FOLDER = "/Users/albertlacambra/Downloads/esther/";
-  private String command;
   private Pattern p = Pattern.compile("\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA (?<minutes>\\d+):(?<seconds>\\d+)");
   private static final String GROUP_PERCENT = "percent";
   private static final String GROUP_MINUTES = "minutes";
@@ -30,15 +29,24 @@ public class YoutubeDLClient {
 //  String o = " -o " + TARGET_FOLDER + "%(title)s.%(ext)s ";
 
   public Flowable<ProgressStep> execute(String opts, String targetUrl, String localDest) {
-    command = String.join("", "youtube-dl ", " -o " + localDest + "/" + "%(title)s.%(ext)s ", opts, targetUrl);
+    String command = String.join("", "youtube-dl ", " -o " + localDest + "/" + "%(title)s.%(ext)s ", opts, targetUrl);
     return Flowable
-        .create(this::emit, BackpressureStrategy.BUFFER)
+        .create((FlowableEmitter<ProgressStep> e) -> emit(e, command), BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io())
         .share()
         ;
   }
 
-  private void emit(Emitter<ProgressStep> emitter) {
+  public Flowable<ProgressStep> updateYoutubeDL() {
+    String command = "youtube-dl -U";
+    return Flowable
+        .create((FlowableEmitter<ProgressStep> e) -> emit(e, command), BackpressureStrategy.BUFFER)
+        .subscribeOn(Schedulers.io())
+        .share()
+        ;
+  }
+
+  private void emit(FlowableEmitter<ProgressStep> emitter, String command) {
     try {
       System.out.println("Running command:" + command);
       Process p = Runtime.getRuntime().exec(command);
@@ -67,9 +75,10 @@ public class YoutubeDLClient {
       StringBuilder currentLine = new StringBuilder();
       int nextChar;
       while ((nextChar = stream.read()) != -1) {
-        if (nextChar == '\r' && callback != null) {
+        if (nextChar == '\n' && callback != null) {
 //          processOutputLine(currentLine.toString(), callback);
           callback.onProgressUpdate(currentLine.toString(), 0, 0);
+          System.out.println(currentLine);
           currentLine.setLength(0);
           continue;
         }
