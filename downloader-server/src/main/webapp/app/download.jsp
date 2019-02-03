@@ -40,7 +40,7 @@
             <span type="text" class="form-control">Només so</span>
         </div>
 
-        <label for="ownerLabel">Destinatari:</label>
+        <label for="ownerLabel">Destinatary:</label>
         <div id="ownerLabel">
             <div class="input-group">
                 <div class="input-group-prepend">
