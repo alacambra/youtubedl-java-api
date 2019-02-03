@@ -3,6 +3,7 @@ package tech.lacambra.downloader.server.view;
 import tech.lacambra.downloader.server.DownloadJob;
 import tech.lacambra.downloader.server.DownloadService;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -11,6 +12,8 @@ import javax.json.stream.JsonCollectors;
 import javax.mvc.Controller;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.logging.Logger;
 
@@ -27,6 +30,9 @@ public class DownloadResource {
 
   @Context
   UriInfo uriInfo;
+
+  @Inject
+  Instance<DownloadJobInfo> infoInstances;
 
   @GET
   @Controller
@@ -54,6 +60,31 @@ public class DownloadResource {
     System.out.println(jobId);
 
     return "/app/download.jsp";
+  }
+
+  @POST
+  @Path("job")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response createJob(JsonObject jobInfo) {
+    DownloadJobInfo ji = infoInstances.get();
+    ji.setUrl(jobInfo.getString("url"));
+    ji.setExtractAudio(jobInfo.getBoolean("extractAudio") ? "on" : "");
+    ji.setOwner(jobInfo.getString("owner"));
+
+    String id = downloadService.beginDownloadJob(ji);
+
+    jobId.setId(id);
+    String l = uriInfo.getRequestUriBuilder().path("{id}").resolveTemplate("id", id).build().toString();
+
+    if (l.contains("lacambra.tech") && !l.contains("https")) {
+      l = l.replace("http", "https");
+    }
+
+    jobId.setLocation(l);
+    System.out.println(jobId);
+
+    return Response.status(201).entity(jobId.getLocation()).build();
   }
 
   @GET
