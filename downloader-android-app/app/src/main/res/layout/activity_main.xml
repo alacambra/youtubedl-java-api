@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+
+    <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:background="?android:attr/windowBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:menu="@menu/navigation">
+    </android.support.design.widget.BottomNavigationView>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <EditText
+                android:layout_width="318dp"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="some-url"
+                android:ems="10"
+                tools:layout_editor_absoluteX="16dp" android:id="@+id/url" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
+        <Button
+                android:text="Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" tools:layout_editor_absoluteY="315dp" tools:layout_editor_absoluteX="16dp" android:id="@+id/button"
+                tools:text="download"/>
+
+        <Switch
+                android:text="Només audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" tools:layout_editor_absoluteX="16dp" android:id="@+id/extractAudio" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/url"/>
+
+        <RadioGroup android:layout_width="match_parent"
+                    android:id="@+id/owner"
+                    android:layout_height="wrap_content"
+                    android:checkedButton="@+id/albert"
+                    tools:layout_editor_absoluteY="200dp"
+                    tools:layout_editor_absoluteX="138dp">
+
+            <RadioButton
+                    android:text="Albert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/albert"
+                    app:layout_constraintTop_toBottomOf="@+id/switch1"
+                    android:layout_marginEnd="290dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="@+id/switch1"
+            />
+            <RadioButton
+                    android:text="Esther"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" tools:layout_editor_absoluteX="16dp" android:id="@+id/esther"
+                    app:layout_constraintTop_toBottomOf="@+id/hannah"/>
+            <RadioButton
+                    android:text="Hannah"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp" android:id="@+id/hannah"
+                    app:layout_constraintTop_toBottomOf="@+id/albert" app:layout_constraintStart_toStartOf="@+id/albert"/>
+            <RadioButton
+                    android:text="Ruth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp" android:id="@+id/ruth"
+                    tools:layout_editor_absoluteX="16dp" app:layout_constraintTop_toBottomOf="@+id/esther"/>
+            <RadioButton
+                    android:text="Tots"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" tools:layout_editor_absoluteX="16dp" android:id="@+id/tots"
+                    app:layout_constraintTop_toBottomOf="@+id/ruth"/>
+
+        </RadioGroup>
+        <EditText
+                android:inputType="textUri"
+                android:text="server"
+                android:ems="10"
+                android:id="@+id/server" tools:text="server" android:singleLine="true" tools:layout_editor_absoluteY="455dp"
+                android:layout_height="wrap_content" android:layout_width="match_parent"/>
+
+        <TextView
+                android:id="@+id/message"
+                android:layout_height="wrap_content"
+                android:text="@string/title_home"
+                android:layout_width="match_parent" tools:text="response" android:visibility="visible"/>
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
