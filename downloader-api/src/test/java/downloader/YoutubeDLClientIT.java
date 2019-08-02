@@ -69,7 +69,7 @@ class YoutubeDLClientIT {
         .options().getFileName().execute(target, YoutubeDLClient.TARGET_FOLDER)
         .subscribe(progressStep -> {
           System.out.println(progressStep);
-          System.out.println(progressStep.getLine());
+          System.out.println(progressStep.getShellNotification());
         }, System.err::println, latch::countDown);
 
     latch.await();

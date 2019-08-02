@@ -47,6 +47,7 @@ public class DownloadResource {
   public String getVideo(@BeanParam DownloadJobInfo jobInfo) {
     LOGGER.info("[getVideo] received job info " + jobInfo);
 
+    downloadService.updateYoutubeDL();
     String id = downloadService.beginDownloadJob(jobInfo);
 
     jobId.setId(id);
@@ -57,7 +58,7 @@ public class DownloadResource {
     }
 
     jobId.setLocation(l);
-    System.out.println(jobId);
+    LOGGER.info("[getVideo] jobId");
 
     return "/app/download.jsp";
   }
@@ -72,6 +73,7 @@ public class DownloadResource {
     ji.setExtractAudio(jobInfo.getBoolean("extractAudio") ? "on" : "");
     ji.setOwner(jobInfo.getString("owner"));
 
+    downloadService.updateYoutubeDL();
     String id = downloadService.beginDownloadJob(ji);
 
     jobId.setId(id);
@@ -82,7 +84,7 @@ public class DownloadResource {
     }
 
     jobId.setLocation(l);
-    System.out.println(jobId);
+    LOGGER.info("[createJob] jobId");
 
     return Response.status(201).entity(jobId.getLocation()).build();
   }
@@ -93,7 +95,7 @@ public class DownloadResource {
     DownloadResult result = downloadService.getDownloadJob(id)
         .map(DownloadJob::getResult)
         .orElse(new DownloadResult(-9999, false, 0f, "NOT_FOUND", "", null));
-    System.out.println("got job:" + result.getJson());
+    LOGGER.info("[getJob] got job:" + result.getJson());
     return result.getJson();
   }
 
@@ -112,7 +114,7 @@ public class DownloadResource {
   @Path("update")
   public JsonArray update() {
     return
-        downloadService.update()
+        downloadService.updateYoutubeDL()
             .stream()
             .map(Json::createValue)
             .collect(JsonCollectors.toJsonArray());

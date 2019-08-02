@@ -7,10 +7,13 @@ import io.reactivex.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class YoutubeDLClient {
+
+  private static final Logger LOGGER = Logger.getLogger(YoutubeDLClient.class.getName());
 
   public static final String TARGET_FOLDER = "/Users/albertlacambra/Downloads/esther/";
   private Pattern p = Pattern.compile("\\[download\\]\\s+(?<percent>\\d+\\.\\d)% .* ETA (?<minutes>\\d+):(?<seconds>\\d+)");
@@ -48,7 +51,7 @@ public class YoutubeDLClient {
 
   private void emit(FlowableEmitter<ProgressStep> emitter, String command) {
     try {
-      System.out.println("Running command:" + command);
+      LOGGER.info("[emit] Running command:" + command);
       Process p = Runtime.getRuntime().exec(command);
 
       InputStream is = p.getInputStream();
@@ -76,12 +79,12 @@ public class YoutubeDLClient {
       int nextChar;
       while ((nextChar = stream.read()) != -1) {
         if (nextChar == '\n' && callback != null) {
-//          processOutputLine(currentLine.toString(), callback);
           callback.onProgressUpdate(currentLine.toString(), 0, 0);
-          System.out.println(currentLine);
+          LOGGER.info("[run] " + currentLine);
           currentLine.setLength(0);
           continue;
         }
+
         currentLine.append((char) nextChar);
       }
       callback.onProgressUpdate(currentLine.toString(), -1, 0);

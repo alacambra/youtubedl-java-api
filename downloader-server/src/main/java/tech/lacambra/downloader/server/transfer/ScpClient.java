@@ -5,11 +5,12 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 public class ScpClient {
 
   private final Session session;
-
+  private static final Logger LOGGER = Logger.getLogger(ScpClient.class.getName());
 
   public static void main(String[] args) throws IOException {
 
@@ -39,7 +40,7 @@ public class ScpClient {
   public void copy(String localSource, String remoteTarget) {
     ChannelExec channel = createChannel(session);
     String cmd = createScpCommand(prepareRemotePath(remoteTarget));
-    System.out.println("Setting command to channel: " + cmd);
+    Logger.getLogger("Setting command to channel: " + cmd);
     channel.setCommand(cmd);
     try {
       channel.connect();

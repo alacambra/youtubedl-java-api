@@ -16,7 +16,7 @@ public class ProgressStep {
     this.exitCode = exitCode;
   }
 
-  public String getLine() {
+  public String getShellNotification() {
     return line;
   }
 

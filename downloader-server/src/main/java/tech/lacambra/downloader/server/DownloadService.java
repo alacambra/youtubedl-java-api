@@ -16,9 +16,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Singleton
 public class DownloadService {
+
+  private static final Logger LOGGER = Logger.getLogger(DownloadService.class.getName());
 
   private Map<String, DownloadJob> downloads;
 
@@ -47,48 +51,61 @@ public class DownloadService {
         .options()
         .extractAudio(downloadJobInfo.isAudio())
         .execute(downloadJobInfo.getUrl(), path.toString())
-        .subscribe(progressStep -> {
-
-          DownloadJob job = downloads.get(id);
-          progressStep
-              .getExitCode()
-              .map(code -> downloads.put(id, cloneForDone(code, job)))
-              .orElseGet(() -> downloads.put(id, cloneForDLInProgress(-9999, progressStep.getProgress(), progressStep.getLine(), job)));
-
-        }, System.err::println, () -> {
-
-          DownloadJob job = downloads.get(id);
-
-          if (job.getResult().getExitCode() != 0) {
-            downloads.put(id, cloneForError(job.getResult().getExitCode(), job));
-            return;
-          }
-
-          File f = new File(job.getTargetFolder());
-          File[] files = f.listFiles();
-
-          if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-              File file = files[i];
-              downloads.put(id, cloneForTXInProgress(-9999, (float) i / files.length, job));
-              String t = downloadJobInfo.isAudio() ? downloadJobInfo.getTransferProperties().getTargetAudio(downloadJobInfo.getOwner()) : downloadJobInfo.getTransferProperties().getTargetVideo(downloadJobInfo.getOwner());
-              scpClient.copy(file.getAbsolutePath(), t + file.getName());
-            }
-          }
-
-          downloads.put(id, cloneForDone(0, job));
-          Disposable disposable = job.getDisposable();
-          disposable.dispose();
-        });
+        .subscribe(
+            progressStep -> processNotification(progressStep, id),
+            e -> LOGGER.log(Level.WARNING, e.getMessage(), e),
+            () -> copyDownloadedFile(downloadJobInfo, id)
+        );
 
     DownloadJob job = new DownloadJob(id, null, d, path.toString(), downloadJobInfo);
     downloads.put(id, job);
     return id;
   }
 
+  private void processNotification(ProgressStep progressStep, String id) {
+    DownloadJob job = downloads.get(id);
+    String message = Optional.ofNullable(job).map(DownloadJob::getResult).map(DownloadResult::getShellNotification).orElse("") + "\n" + progressStep.getShellNotification();
+    progressStep
+        .getExitCode()
+        .map(code -> downloads.put(id, cloneForDone(code, job)))
+        .orElseGet(() -> downloads.put(id, cloneForDLInProgress(-9999, progressStep.getProgress(), message, job)));
+
+  }
+
+  private void copyDownloadedFile(DownloadJobInfo downloadJobInfo, String id) {
+    DownloadJob job = downloads.get(id);
+
+    if (job.getResult().getExitCode() != 0) {
+      downloads.put(id, cloneForError(job.getResult().getExitCode(), job));
+      return;
+    }
+
+    LOGGER.info("[beginDownloadJob] Target folder is " + job.getTargetFolder());
+
+    File f = new File(job.getTargetFolder());
+    File[] files = f.listFiles();
+
+    if (files != null) {
+      for (int i = 0; i < files.length; i++) {
+        File file = files[i];
+        downloads.put(id, cloneForTXInProgress(-9999, (float) i / files.length, job));
+        String target = downloadJobInfo.isAudio() ? downloadJobInfo.getTransferProperties().getTargetAudio(downloadJobInfo.getOwner()) : downloadJobInfo.getTransferProperties().getTargetVideo(downloadJobInfo.getOwner());
+        target = target + file.getName();
+
+        LOGGER.info("[beginDownloadJob] Scp copy. " + file.getAbsolutePath() + " -> " + target);
+
+        scpClient.copy(file.getAbsolutePath(), target + file.getName());
+      }
+    }
+
+    downloads.put(id, cloneForDone(0, job));
+    Disposable disposable = job.getDisposable();
+    disposable.dispose();
+  }
+
   private DownloadJob cloneForDone(int code, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, true, 100.0f, "DONE", "", job.getDownloadJobInfo()),
+        new DownloadResult(code, true, 100.0f, "DONE", job.getResult().getShellNotification(), job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()
@@ -115,7 +132,7 @@ public class DownloadService {
 
   private DownloadJob cloneForTXInProgress(int code, float progress, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, false, progress, "TX_IN_PROGRESS", "Copying....", job.getDownloadJobInfo()),
+        new DownloadResult(code, false, progress, "TR_IN_PROGRESS", job.getResult().getShellNotification() + "\nCopying....", job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()
@@ -130,8 +147,8 @@ public class DownloadService {
     return new ArrayList<>(downloads.values());
   }
 
-  public List<String> update() {
-    System.out.println("updating....");
-    return dlClient.updateYoutubeDL().map(ProgressStep::getLine).toList().blockingGet();
+  public List<String> updateYoutubeDL() {
+    LOGGER.info("[updateYoutubeDL] updating....");
+    return dlClient.updateYoutubeDL().map(ProgressStep::getShellNotification).toList().blockingGet();
   }
 }

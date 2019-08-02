@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class SshToolsProducer {
+
+  private static final Logger LOGGER = Logger.getLogger(ScpClient.class.getName());
 
   @Inject
   JSchSessionFactory sessionFactory;
@@ -24,6 +27,9 @@ public class SshToolsProducer {
 
   @Produces
   public Session getSession() throws IOException {
+
+    LOGGER.info("[getSession] LOading session data from " + System.getenv("DOWNLOADER_SSH_PROPERTIES"));
+
     BufferedReader reader = Files.newBufferedReader(Paths.get(System.getenv("DOWNLOADER_SSH_PROPERTIES")));
     Properties p = new Properties();
     p.load(reader);
