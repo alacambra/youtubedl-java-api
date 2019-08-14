@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Downloader</title>
+</head>
+
+<body>
+<h3>Loading</h3>
+<job-list></job-list>
+
+</body>
+
+
+<script src="/lib/mustache.js"></script>
+<script src="JobList.js" type="module"></script>
+
+</html>
+
+<template id="downloadListTpl">
+  <details>
+    <summary>Download info for download {{id}}</summary>
+    <ul>
+      <li>
+        <span>exitCode:</span>
+        <span>{{exitCode}}</span>
+      </li>
+      <li>
+        <span>done:</span>
+        <span>{{done}}</span>
+      </li>
+      <li>
+        <span>status:</span>
+        <span>{{status}}</span>
+      </li>
+      <li>
+        <span>outputText:</span>
+        <span>{{line}}</span>
+      </li>
+      <details>
+        <summary>Download params</summary>
+        <li>
+          <span>url:</span>
+          <span>{{url}}</span>
+        </li>
+        <li>
+          <span>extractAudio:</span>
+          <span>{{extractAudio}}</span>
+        </li>
+        <li>
+          <span>owner:</span>
+          <span>{{owner}}</span>
+        </li>
+    </ul>
+  </details>
+</template>
