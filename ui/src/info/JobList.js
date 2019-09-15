@@ -1,6 +1,9 @@
+import {JobClient} from "/remote/DataClient.js";
+
 export class JobList extends HTMLElement {
     constructor() {
         super();
+        this.jobClient = new JobClient();
         this.loadElements();
         console.info(this.innerText)
     }
@@ -13,13 +16,16 @@ export class JobList extends HTMLElement {
         this.appendChild(this.button);
         this.appendChild(this.jobs);
         this.button.addEventListener("click", ev => this.fetchJobs());
+
     }
 
     fetchJobs() {
-        fetch("response-multiple.json").then(response => response.text().then(body => {
+        fetch("/dev-data/response-multiple.json").then(response => response.text().then(body => {
             let jobs = JSON.parse(body);
             this.renderJobs(jobs);
         }));
+
+        this.jobClient.fetchJobs();
     }
 
     renderJobs(jobs) {

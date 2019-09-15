@@ -4,54 +4,101 @@
 <head>
   <meta charset="UTF-8">
   <title>Downloader</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
 </head>
 
 <body>
-<h3>Loading</h3>
-<job-list></job-list>
+<h3>Loading1</h3>
+
+<downloader-form owners="albert,ruth,esther,hannah,tots" checked="albert"></downloader-form>
+<!--<job-list></job-list>-->
 
 </body>
 
 
-<script src="/lib/mustache.js"></script>
-<script src="JobList.js" type="module"></script>
+<!--<script src="/lib/mustache.js"></script>-->
+
+<script src="/remote/HttpClient.js" type="module"></script>
+<script src="/remote/DataClient.js" type="module"></script>
+<script src="/download/DownloadForm.js" type="module"></script>
+<script src="/info/JobList.js" type="module"></script>
 
 </html>
 
-<template id="downloadListTpl">
-  <details>
-    <summary>Download info for download {{id}}</summary>
-    <ul>
-      <li>
-        <span>exitCode:</span>
-        <span>{{exitCode}}</span>
-      </li>
-      <li>
-        <span>done:</span>
-        <span>{{done}}</span>
-      </li>
-      <li>
-        <span>status:</span>
-        <span>{{status}}</span>
-      </li>
-      <li>
-        <span>outputText:</span>
-        <span>{{line}}</span>
-      </li>
-      <details>
-        <summary>Download params</summary>
+<div id="jobs-info-tpls">
+  <template id="downloadListTpl">
+    <details>
+      <summary>Download info for download {{id}}</summary>
+      <ul>
         <li>
-          <span>url:</span>
-          <span>{{url}}</span>
+          <span>exitCode:</span>
+          <span>{{exitCode}}</span>
         </li>
         <li>
-          <span>extractAudio:</span>
-          <span>{{extractAudio}}</span>
+          <span>done:</span>
+          <span>{{done}}</span>
         </li>
         <li>
-          <span>owner:</span>
-          <span>{{owner}}</span>
+          <span>status:</span>
+          <span>{{status}}</span>
         </li>
-    </ul>
-  </details>
-</template>
+        <li>
+          <span>outputText:</span>
+          <span>{{line}}</span>
+        </li>
+        <details>
+          <summary>Download params</summary>
+          <li>
+            <span>url:</span>
+            <span>{{url}}</span>
+          </li>
+          <li>
+            <span>extractAudio:</span>
+            <span>{{extractAudio}}</span>
+          </li>
+          <li>
+            <span>owner:</span>
+            <span>{{owner}}</span>
+          </li>
+        </details>
+      </ul>
+    </details>
+  </template>
+</div>
+<div id="downloader-form-tpls">
+  <template id="owner-option">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <div class="input-group-text">
+          <input type="radio" name="owner" value="${owner}">
+        </div>
+      </div>
+      <span type="text" class="form-control">${owner}</span>
+    </div>
+  </template>
+
+  <template id="downloaderForm">
+    <div class="form">
+      <div class="input-group mb-3">
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <span type="text">URL</span>
+          </div>
+        </div>
+        <input type="text" class="form-control" name="url" id="url"/><br>
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-append">
+          <div class="input-group-text">
+            <input type="checkbox" name="extractAudio" id="extractAudio">
+          </div>
+        </div>
+        <span type="text" class="form-control">Només so</span>
+      </div>
+
+      <downloader-owner></downloader-owner>
+      <button value="download">Start job</button>
+    </div>
+  </template>
+</div>
