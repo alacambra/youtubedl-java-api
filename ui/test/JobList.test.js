@@ -1,0 +1,1 @@
+it("", () => console.log("ok"));

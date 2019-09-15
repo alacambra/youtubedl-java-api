@@ -1,13 +1,11 @@
 export class JobList extends HTMLElement {
     constructor() {
-
         super();
         this.loadElements();
         console.info(this.innerText)
     }
 
     loadElements() {
-
         this.listTpl = document.querySelector('#downloadListTpl');
         this.button = document.createElement("button");
         this.button.innerText = "click";
@@ -39,7 +37,6 @@ export class JobList extends HTMLElement {
 
     flattenResponse(json) {
         let info = json["downloadJobInfo"];
-        console.info(info);
         Object.keys(info).forEach(k => {
             json[k] = info[k];
         });
