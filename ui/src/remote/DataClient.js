@@ -9,7 +9,7 @@ export class DataClient {
 
     sendJob(payload) {
         console.log("owner=" + JSON.stringify(payload));
-        return this.httpClient.postData("/downloader/views/download/job/", payload);
+        return this.httpClient.postData("../views/download/job/", payload);
     }
 }
 

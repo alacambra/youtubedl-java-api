@@ -1,6 +1,7 @@
-import {DataClient} from "/remote/DataClient.js"
+import {DataClient} from "../remote/DataClient.js"
 
 class DownloaderForm extends HTMLElement {
+
     constructor() {
         super();
         console.log("Init DownloadFrom Controller");
@@ -8,41 +9,35 @@ class DownloaderForm extends HTMLElement {
     }
 
     connectedCallback() {
-        console.log("connectedCallback DownloadFrom Controller");
 
+        console.log("connectedCallback DownloadFrom Controller");
         const template = document.querySelector('#downloaderForm');
         console.log("Template DownloadFrom loaded");
 
-        const node = document.importNode(template.content, true);
         const owners = this.getAttribute('owners');
         const checked = this.getAttribute('checked');
-        node.querySelector("downloader-owner").setAttribute("owners", owners)
-        node.querySelector("downloader-owner").setAttribute("checked", checked)
+        const node = document.importNode(template.content, true);
+        node.querySelector("downloader-owner").setAttribute("owners", owners);
+
+        node.querySelector("downloader-owner").setAttribute("checked", checked);
+
         const button = node.querySelector("button");
-        // button.onclick = ev => this.doJob();
-
-        button.addEventListener("click", () => {
-            const payload = {};
-            payload.owner = document.querySelector('input[name=owner]:checked').value;
-            payload.url = document.querySelector('input[name=url]').value;
-            payload.extractAudio = document.querySelector('input[name=extractAudio]').checked || false;
-
-            // this.client.sendJob(payload);
-            console.log(payload);
-        });
-
-        console.log("Node DownloadFrom loaded");
+        button.addEventListener("click", () => this.beginJob());
 
         console.log("DownloaderForm before-attach");
-
         this.appendChild(node);
         console.log("DownloaderForm done")
     }
 
-    doJob() {
-        console.log("doing job.....")
-    }
+    beginJob() {
+        const payload = {};
+        payload.owner = document.querySelector('input[name=owner]:checked').value;
+        payload.url = document.querySelector('input[name=url]').value;
+        payload.extractAudio = document.querySelector('input[name=extractAudio]').checked || false;
 
+        console.log("sending payload...", payload);
+        this.client.sendJob(payload);
+    }
 }
 
 

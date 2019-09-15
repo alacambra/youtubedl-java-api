@@ -1,4 +1,4 @@
-import {JobClient} from "/remote/DataClient.js";
+import {JobClient} from "../remote/DataClient.js";
 
 export class JobList extends HTMLElement {
     constructor() {
