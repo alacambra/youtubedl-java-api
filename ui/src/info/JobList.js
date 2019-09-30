@@ -1,6 +1,7 @@
 import {JobClient} from "../remote/DataClient.js";
 
 export class JobList extends HTMLElement {
+
     constructor() {
         super();
         this.jobClient = new JobClient();

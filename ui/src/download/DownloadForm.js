@@ -1,5 +1,7 @@
 import {DataClient} from "../remote/DataClient.js"
 
+const processResponse = Symbol('processResponse');
+
 class DownloaderForm extends HTMLElement {
 
     constructor() {
@@ -22,7 +24,7 @@ class DownloaderForm extends HTMLElement {
         node.querySelector("downloader-owner").setAttribute("checked", checked);
 
         const button = node.querySelector("button");
-        button.addEventListener("click", () => this.beginJob());
+        button.addEventListener("click", () => this.beginJob().then(""));
 
         console.log("DownloaderForm before-attach");
         this.appendChild(node);
@@ -36,7 +38,7 @@ class DownloaderForm extends HTMLElement {
         payload.extractAudio = document.querySelector('input[name=extractAudio]').checked || false;
 
         console.log("sending payload...", payload);
-        this.client.sendJob(payload);
+        return this.client.sendJob(payload).then(jobInfo => console.log(jobInfo));
     }
 }
 

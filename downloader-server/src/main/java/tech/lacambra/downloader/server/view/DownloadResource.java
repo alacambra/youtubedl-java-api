@@ -12,7 +12,6 @@ import javax.json.stream.JsonCollectors;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.logging.Logger;
 
@@ -37,9 +36,10 @@ public class DownloadResource {
   @Path("job")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public Response createJob(DownloadJobInfo jobInfo) {
+  public JobId createJob(DownloadJobInfo jobInfo) {
 
     LOGGER.info("[createJob] Received jobInfo: " + jobInfo);
+
     jobInfo.setTransferProperties(transferProperties);
     downloadService.updateYoutubeDL();
 
@@ -55,7 +55,7 @@ public class DownloadResource {
     jobId.setLocation(l);
     LOGGER.info("[createJob] Job created=" + jobId);
 
-    return Response.status(Response.Status.CREATED).entity(jobId.getLocation()).build();
+    return jobId;
   }
 
   @GET
