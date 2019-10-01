@@ -1,0 +1,38 @@
+body {
+    padding: 0px;
+    margin: 0px;
+}
+
+main {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr 10fr;
+    grid-template-columns: 4fr;
+    grid-template-areas: "nav" "article";
+}
+
+nav {
+    grid-area: nav;
+}
+
+article {
+    grid-area: article;
+}
+
+a {
+    font-size: 1em;
+    text-decoration: none;
+    padding: 1em;
+    background-color: aquamarine;
+}
+
+
+.a-link {
+    text-decoration: underline;
+    padding: 1em;
+}
+
+.active-link {
+    background: lightpink;
+}
+

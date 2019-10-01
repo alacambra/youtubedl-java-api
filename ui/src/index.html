@@ -7,23 +7,25 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
         crossorigin="anonymous">
+  <link rel="stylesheet" href="./app.css">
 </head>
 
 <body>
-<nav>
-  <app-nav>
-    <a href="#newjob">Start new Job<br/></a>
-    <a href="#joblist">List existing jobs</a>
-  </app-nav>
-</nav>
+<main>
+  <nav>
+    <app-nav>
+      <a href="#newjob">Start new Job</a>
+      <a href="#joblist">List existing jobs</a>
+    </app-nav>
+  </nav>
 
-<article>
-  <app-slot>
-    <downloader-form style="visibility: visible" owners="albert,ruth,esther,hannah,tots" checked="albert"></downloader-form>
-    <job-list style="visibility: visible"></job-list>
-  </app-slot>
-</article>
-
+  <article>
+    <app-slot>
+      <downloader-form style="visibility: visible" owners="albert,ruth,esther,hannah,tots" checked="albert"></downloader-form>
+      <job-list style="visibility: visible"></job-list>
+    </app-slot>
+  </article>
+</main>
 </body>
 
 
@@ -35,7 +37,7 @@
 <div id="jobs-info-tpls">
   <template id="downloadListTpl">
     <details>
-      <summary>Download info for download {{id}}</summary>
+      <summary>Download info: {{fileName}}</summary>
       <ul>
         <li>
           <span>fileName:</span>
@@ -54,24 +56,23 @@
           <span>{{status}}</span>
         </li>
         <li>
-          <span>outputText:</span>
-          <span>{{line}}</span>
+          <span>url:</span>
+          <span>{{url}}</span>
         </li>
-        <details>
-          <summary>Download params</summary>
-          <li>
-            <span>url:</span>
-            <span>{{url}}</span>
-          </li>
-          <li>
-            <span>extractAudio:</span>
-            <span>{{extractAudio}}</span>
-          </li>
-          <li>
-            <span>owner:</span>
-            <span>{{owner}}</span>
-          </li>
-        </details>
+        <li>
+          <span>extractAudio:</span>
+          <span>{{extractAudio}}</span>
+        </li>
+        <li>
+          <span>owner:</span>
+          <span>{{owner}}</span>
+        </li>
+        <li>
+          <span>outputText:</span>
+          <details>
+            <span>{{line}}</span>
+          </details>
+        </li>
       </ul>
     </details>
   </template>

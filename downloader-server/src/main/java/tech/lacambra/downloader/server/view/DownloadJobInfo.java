@@ -32,7 +32,7 @@ public class DownloadJobInfo {
   }
 
   public boolean isAudio() {
-    return "on".equals(extractAudio);
+    return extractAudio;
   }
 
   public void setExtractAudio(Boolean extractAudio) {
