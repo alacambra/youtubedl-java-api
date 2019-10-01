@@ -21,16 +21,12 @@ export class JobList extends HTMLElement {
     }
 
     fetchJobs() {
-        fetch("/dev-data/response-multiple.json").then(response => response.text().then(body => {
-            let jobs = JSON.parse(body);
-            this.renderJobs(jobs);
-        }));
-
-        this.jobClient.fetchJobs();
+        this.jobClient.getCurrentJobs().then(j => this.renderJobs(j));
     }
 
     renderJobs(jobs) {
         this.jobs.innerHTML = "";
+        console.log(jobs);
         jobs.forEach(job => this.renderJob(job));
     }
 

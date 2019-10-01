@@ -4,25 +4,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Downloader</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
         crossorigin="anonymous">
 </head>
 
 <body>
-<h3>Loading1</h3>
+<nav>
+  <app-nav>
+    <a href="#newjob">Start new Job<br/></a>
+    <a href="#joblist">List existing jobs</a>
+  </app-nav>
+</nav>
 
-<downloader-form owners="albert,ruth,esther,hannah,tots" checked="albert"></downloader-form>
-<!--<job-list></job-list>-->
+<article>
+  <app-slot>
+    <downloader-form style="visibility: visible" owners="albert,ruth,esther,hannah,tots" checked="albert"></downloader-form>
+    <job-list style="visibility: visible"></job-list>
+  </app-slot>
+</article>
 
 </body>
 
 
-<!--<script src="/lib/mustache.js"></script>-->
-
-<script src="./remote/HttpClient.js" type="module"></script>
-<script src="./remote/DataClient.js" type="module"></script>
-<script src="./download/DownloadForm.js" type="module"></script>
-<script src="./info/JobList.js" type="module"></script>
+<script src="./lib/mustache.js"></script>
+<script src="./modules.js" type="module"></script>
 
 </html>
 
@@ -31,6 +37,10 @@
     <details>
       <summary>Download info for download {{id}}</summary>
       <ul>
+        <li>
+          <span>fileName:</span>
+          <span>{{fileName}}</span>
+        </li>
         <li>
           <span>exitCode:</span>
           <span>{{exitCode}}</span>
@@ -66,6 +76,8 @@
     </details>
   </template>
 </div>
+
+
 <div id="downloader-form-tpls">
   <template id="owner-option">
     <div class="input-group">

@@ -2,33 +2,32 @@ import {DataClient} from "../remote/DataClient.js"
 
 const processResponse = Symbol('processResponse');
 
-class DownloaderForm extends HTMLElement {
+export class DownloaderForm extends HTMLElement {
 
     constructor() {
         super();
         console.log("Init DownloadFrom Controller");
         this.client = new DataClient();
+        this.connected = false;
     }
 
     connectedCallback() {
 
-        console.log("connectedCallback DownloadFrom Controller");
-        const template = document.querySelector('#downloaderForm');
-        console.log("Template DownloadFrom loaded");
+        if (!this.connected) {
+            const template = document.querySelector('#downloaderForm');
+            const owners = this.getAttribute('owners');
+            const checked = this.getAttribute('checked');
+            const node = document.importNode(template.content, true);
 
-        const owners = this.getAttribute('owners');
-        const checked = this.getAttribute('checked');
-        const node = document.importNode(template.content, true);
-        node.querySelector("downloader-owner").setAttribute("owners", owners);
+            node.querySelector("downloader-owner").setAttribute("owners", owners);
+            node.querySelector("downloader-owner").setAttribute("checked", checked);
 
-        node.querySelector("downloader-owner").setAttribute("checked", checked);
+            const button = node.querySelector("button");
+            button.addEventListener("click", () => this.beginJob().then(""));
 
-        const button = node.querySelector("button");
-        button.addEventListener("click", () => this.beginJob().then(""));
-
-        console.log("DownloaderForm before-attach");
-        this.appendChild(node);
-        console.log("DownloaderForm done")
+            this.appendChild(node);
+            this.connected = true;
+        }
     }
 
     beginJob() {
@@ -44,35 +43,37 @@ class DownloaderForm extends HTMLElement {
 
 
 class DownloaderOwner extends HTMLElement {
+
     constructor() {
         super();
-        console.log("Init DownloaderOwner Controller");
+        this.connected = false;
     }
 
     connectedCallback() {
-        const template = document.querySelector('#owner-option');
-        const node = document.importNode(template.content, true);
-        const checked = this.getAttribute('checked');
-        console.log("DownloaderOwner before-attach");
-        const owners = this.getAttribute('owners');
-
-        owners.split(",").map(owner => {
+        if (!this.connected) {
+            const template = document.querySelector('#owner-option');
             const node = document.importNode(template.content, true);
-            const input = node.querySelector('input');
-            input.setAttribute("value", owner);
+            const checked = this.getAttribute('checked');
+            const owners = this.getAttribute('owners');
 
-            if (checked === owner) {
-                input.setAttribute("checked", true);
-            }
+            owners.split(",").map(owner => {
+                const node = document.importNode(template.content, true);
+                const input = node.querySelector('input');
+                input.setAttribute("value", owner);
 
-            const span = node.querySelector('span');
-            span.innerHTML = owner;
+                if (checked === owner) {
+                    input.setAttribute("checked", true);
+                }
 
-            return node;
-        }).forEach(owner => {
-            this.appendChild(owner);
-        });
-        console.log("DownloaderOwner done")
+                const span = node.querySelector('span');
+                span.innerHTML = owner;
+
+                return node;
+            }).forEach(owner => {
+                this.appendChild(owner);
+            });
+            this.connected = true;
+        }
     }
 }
 
