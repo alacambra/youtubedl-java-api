@@ -10,6 +10,7 @@ public class DownloadJob {
   private DownloadResult result;
   private String targetFolder;
   private DownloadJobInfo downloadJobInfo;
+  private long time;
 
   private Disposable disposable;
 
@@ -19,6 +20,7 @@ public class DownloadJob {
     this.disposable = disposable;
     this.targetFolder = targetFolder;
     this.downloadJobInfo = downloadJobInfo;
+    time = System.currentTimeMillis();
   }
 
   public String getId() {
@@ -39,6 +41,10 @@ public class DownloadJob {
 
   public DownloadJobInfo getDownloadJobInfo() {
     return downloadJobInfo;
+  }
+
+  public long getTime() {
+    return time;
   }
 
   @Override

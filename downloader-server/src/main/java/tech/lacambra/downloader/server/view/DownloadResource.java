@@ -13,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.util.Comparator;
 import java.util.logging.Logger;
 
 @Path("download")
@@ -74,6 +75,7 @@ public class DownloadResource {
     return downloadService
         .getDownloadJobs()
         .stream()
+        .sorted(Comparator.comparingLong(DownloadJob::getTime))
         .map(DownloadJob::getResult)
         .map(DownloadResult::getJson)
         .collect(JsonCollectors.toJsonArray());
