@@ -22,7 +22,7 @@ public class DownloadResult {
     this.progress = progress;
     this.status = status;
     this.shellNotification = shellNotification;
-    this.downloadJobInfo = Optional.ofNullable(downloadJobInfo).orElse(new DownloadJobInfo("", "", ""));
+    this.downloadJobInfo = Optional.ofNullable(downloadJobInfo).orElse(new DownloadJobInfo());
   }
 
   public Integer getExitCode() {

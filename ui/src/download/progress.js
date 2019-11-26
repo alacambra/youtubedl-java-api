@@ -2,8 +2,7 @@
 
 function retry(id) {
 
-    let url = "download/job/" + id;
-    console.info("sending request", url);
+    let url = "download/job/" + id;    console.info("sending request", url);
 
     fetch(url).then(result => {
         console.info("received result:", result.body());

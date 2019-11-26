@@ -3,52 +3,44 @@ package tech.lacambra.downloader.server.view;
 
 import tech.lacambra.downloader.server.TransferProperties;
 
-import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.FormParam;
 import java.util.Objects;
 import java.util.Optional;
 
 public class DownloadJobInfo {
 
-  @Inject
   TransferProperties transferProperties;
 
-  @FormParam("url")
   @NotNull
   private String url;
 
-  @FormParam("extractAudio")
   @NotNull
-  private String extractAudio;
+  private Boolean extractAudio;
 
 
-  @FormParam("owner")
   @NotNull
   private String owner;
 
-  public DownloadJobInfo(@NotNull String url, @NotNull String extractAudio, @NotNull String owner) {
-    this.url = url;
-    this.extractAudio = Objects.requireNonNull(extractAudio);
-    this.owner = owner;
-  }
-
   public DownloadJobInfo() {
-    extractAudio = "false";
+    extractAudio = false;
   }
 
-  public String getExtractAudio() {
-    return Optional.ofNullable(extractAudio).orElse("no");
+  public Boolean getExtractAudio() {
+    return Optional.ofNullable(extractAudio).orElse(false);
   }
 
   public boolean isAudio() {
-    return "on".equals(extractAudio);
+    return extractAudio;
   }
 
-  public void setExtractAudio(String extractAudio) {
+  public void setExtractAudio(Boolean extractAudio) {
     this.extractAudio = Objects.requireNonNull(extractAudio);
+  }
+
+  public void setTransferProperties(TransferProperties transferProperties) {
+    this.transferProperties = transferProperties;
   }
 
   public String getUrl() {

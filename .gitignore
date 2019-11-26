@@ -6,3 +6,5 @@
 **/*.versionsBackup
 ssh-params.properties
 transfer.properties
+**/app
+**/*/downloader_rsa*

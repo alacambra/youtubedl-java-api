@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+onchange '/Users/albertlacambra/git/lacambra.tech/downloader/ui/src/**/*' -- cp -Rf /Users/albertlacambra/git/lacambra.tech/downloader/ui/src/  /Users/albertlacambra/git/lacambra.tech/downloader/downloader-server/target/downloader/app/

@@ -1,9 +1,7 @@
-export default class HttpClient {
-
+export class HttpClient {
 
     constructor() {
         const credentials = "same-origin";
-        console.info("hellooo");
     }
 
     getData(url = ``) {
