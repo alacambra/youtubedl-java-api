@@ -1,13 +1,21 @@
+import {DataClient} from "../remote/DataClient.js"
+
 export class AppNav extends HTMLElement {
 
     constructor() {
         super();
+        this.client = new DataClient();
     }
 
     connectedCallback() {
         const links = this.querySelectorAll("a");
         console.log(links);
         links.forEach(link => this.registerLinkListener(link));
+
+        const clear = this.querySelector("#clearFinishedJobs");
+        clear.addEventListener("click", e => {
+            return this.client.cleanJobs();
+        });
     }
 
     registerLinkListener(el) {

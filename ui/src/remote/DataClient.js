@@ -13,6 +13,10 @@ export class DataClient {
         return this.httpClient.postData("../views/download/job/", payload);
     }
 
+    cleanJobs() {
+        return this.httpClient.delete("../views/download/job/finished");
+    }
+
     [processResponse](response) {
         response.text().then(b => console.log(b));
     }

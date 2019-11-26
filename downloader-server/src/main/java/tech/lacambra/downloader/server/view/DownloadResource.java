@@ -90,4 +90,19 @@ public class DownloadResource {
             .map(Json::createValue)
             .collect(JsonCollectors.toJsonArray());
   }
+
+  @DELETE
+  @Path("job/finished")
+  public JsonArray deleteFinsihed() {
+
+    downloadService.clearJobs();
+
+    return downloadService
+        .getDownloadJobs()
+        .stream()
+        .sorted(Comparator.comparingLong(DownloadJob::getTime))
+        .map(DownloadJob::getResult)
+        .map(DownloadResult::getJson)
+        .collect(JsonCollectors.toJsonArray());
+  }
 }

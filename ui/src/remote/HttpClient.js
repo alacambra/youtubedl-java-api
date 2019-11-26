@@ -23,6 +23,17 @@ export class HttpClient {
             .then(response => response.json()); // parses response to JSON
     }
 
+    delete(url = ``, data = {}) {
+        // Default options are marked with *
+        return fetch(url, {
+            method: "DELETE", // *GET, POST, PUT, DELETE, etc.
+            headers: {},
+            redirect: "follow", // manual, *follow, error
+            referrer: "no-referrer", // no-referrer, *client
+        })
+            .then(response => response.json()); // parses response to JSON
+    }
+
     putData(url = ``, data = {}) {
         // Default options are marked with *
         return fetch(url, {

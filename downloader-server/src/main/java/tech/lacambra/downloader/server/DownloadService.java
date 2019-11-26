@@ -147,6 +147,14 @@ public class DownloadService {
     return new ArrayList<>(downloads.values());
   }
 
+  public void clearJobs() {
+    for (Map.Entry<String, DownloadJob> entry : downloads.entrySet()) {
+      if (entry.getValue().getResult().isDone()) {
+        downloads.remove(entry.getKey());
+      }
+    }
+  }
+
   public List<String> updateYoutubeDL() {
     LOGGER.info("[updateYoutubeDL] updating....");
     return dlClient.updateYoutubeDL().map(ProgressStep::getShellNotification).toList().blockingGet();
