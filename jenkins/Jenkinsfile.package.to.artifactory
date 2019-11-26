@@ -45,7 +45,6 @@ pipeline {
                 ){
                     sh '$MVN_CMD deploy'
                 }
-                
             }
         }
     }

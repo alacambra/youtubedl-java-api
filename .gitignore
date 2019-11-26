@@ -7,4 +7,6 @@
 ssh-params.properties
 transfer.properties
 **/app
+!**/.gitkeep
 **/*/downloader_rsa*
+**/.DS_Store
