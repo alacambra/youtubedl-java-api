@@ -62,7 +62,7 @@ public class DownloadResource {
   @GET
   @Path("job/{id}")
   public JsonObject getJob(@PathParam("id") String id) {
-    DownloadResult result = downloadService.getDownloadJob(id)
+    var result = downloadService.getDownloadJob(id)
         .map(DownloadJob::getResult)
         .orElse(new DownloadResult(-9999, false, 0f, "NOT_FOUND", "", null));
     LOGGER.info("[getJob] got job:" + result.getJson());
