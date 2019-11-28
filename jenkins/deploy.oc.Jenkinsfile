@@ -3,7 +3,7 @@ def applicationName = "downloader";
 
 pipeline{
     agent {
-        label 'maven'
+        label 'maven-j13'
     }
 
     stages{
