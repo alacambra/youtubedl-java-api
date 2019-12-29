@@ -1,4 +1,4 @@
-FROM airhacks/s2i-wildfly:0.0.3
+FROM alacambra/wildfly-s2i-app:18.0.0_13.0.1_9
 RUN mkdir -p /opt/downloder/bin/
 RUN curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /opt/downloder/bin/youtube-dl
 RUN chmod +x /opt/downloder/bin/youtube-dl

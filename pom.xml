@@ -7,7 +7,7 @@
     <groupId>tech.lacambra</groupId>
     <artifactId>downloader</artifactId>
     <packaging>pom</packaging>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7</version>
     <modules>
         <module>downloader-api</module>
         <module>downloader-server</module>
