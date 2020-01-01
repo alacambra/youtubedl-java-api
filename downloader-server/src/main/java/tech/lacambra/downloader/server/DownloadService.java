@@ -3,7 +3,7 @@ package tech.lacambra.downloader.server;
 import downloader.tech.lacambra.downloader.client.ProgressStep;
 import downloader.tech.lacambra.downloader.client.YoutubeDLClient;
 import io.reactivex.disposables.Disposable;
-import tech.lacambra.downloader.server.transfer.ScpClient;
+import tech.lacambra.downloader.server.transfer.SftpClient;
 import tech.lacambra.downloader.server.view.DownloadJobInfo;
 import tech.lacambra.downloader.server.view.DownloadResult;
 
@@ -34,7 +34,7 @@ public class DownloadService {
   YoutubeDLClient dlClient;
 
   @Inject
-  ScpClient scpClient;
+  SftpClient sftpClient;
 
   public String beginDownloadJob(DownloadJobInfo downloadJobInfo) {
 
@@ -80,7 +80,7 @@ public class DownloadService {
       return;
     }
 
-    LOGGER.info("[beginDownloadJob] Target folder is " + job.getTargetFolder());
+    LOGGER.info("[copyDownloadedFile] Target folder is " + job.getTargetFolder());
 
     File f = new File(job.getTargetFolder());
     File[] files = f.listFiles();
@@ -92,9 +92,9 @@ public class DownloadService {
         String target = downloadJobInfo.isAudio() ? downloadJobInfo.getTransferProperties().getTargetAudio(downloadJobInfo.getOwner()) : downloadJobInfo.getTransferProperties().getTargetVideo(downloadJobInfo.getOwner());
         target = target + file.getName();
 
-        LOGGER.info("[beginDownloadJob] Scp copy. " + file.getAbsolutePath() + " -> " + target);
+        LOGGER.info("[copyDownloadedFile] copy. " + file.getAbsolutePath() + " -> " + target);
 
-        scpClient.copy(file.getAbsolutePath(), target + file.getName());
+        sftpClient.uploadFile(file.getAbsolutePath(), target + file.getName());
       }
     }
 

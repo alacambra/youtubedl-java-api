@@ -26,8 +26,8 @@ public class ScpClient {
 //    scpClient.copy(lfile, rfile + 2);
 //    scpClient.copy(lfile, rfile + 3);
 
-    SftpClient sftpClient = new SftpClient(session);
-    sftpClient.createDir("/var/services/homes/alacambra/test-folder/test1");
+    SftpClient sftpClient = sshToolsProducer.getSftpClient(session);
+    sftpClient.createDir("");
 
     scpClient.disconnect();
     session.disconnect();

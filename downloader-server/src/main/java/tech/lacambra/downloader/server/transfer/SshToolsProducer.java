@@ -21,14 +21,19 @@ public class SshToolsProducer {
 
 
   @Produces
-  public ScpClient getScpClient(Session session) throws IOException {
+  public ScpClient getScpClient(Session session) {
     return new ScpClient(session);
+  }
+
+  @Produces
+  public SftpClient getSftpClient(Session session) {
+    return new SftpClient(session);
   }
 
   @Produces
   public Session getSession() throws IOException {
 
-    LOGGER.info("[getSession] LOading session data from " + System.getenv("DOWNLOADER_SSH_PROPERTIES"));
+    LOGGER.info("[getSession] Loading session data from " + System.getenv("DOWNLOADER_SSH_PROPERTIES"));
 
     BufferedReader reader = Files.newBufferedReader(Paths.get(System.getenv("DOWNLOADER_SSH_PROPERTIES")));
     Properties p = new Properties();

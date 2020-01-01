@@ -7,7 +7,7 @@
     <groupId>tech.lacambra</groupId>
     <artifactId>downloader</artifactId>
     <packaging>pom</packaging>
-    <version>1.7</version>
+    <version>1.8</version>
     <modules>
         <module>downloader-api</module>
         <module>downloader-server</module>
@@ -16,14 +16,6 @@
     <properties>
         <failOnMissingWebXml>false</failOnMissingWebXml>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>ArtifactoryLacambraTech</id>
-            <name>artifactory.lacambra.de</name>
-            <url>https://jfrog.lacambra.tech/artifactory/lacambra.tech/</url>
-        </repository>
-    </distributionManagement>
 
     <build>
         <plugins>
