@@ -19,13 +19,24 @@ article {
     grid-area: article;
 }
 
+@media screen and (max-width: 500px) {
+    a {
+        font-size: 1em;
+        text-decoration: none;
+        padding: 1em;
+        background-color: aquamarine;
+        display: block;
+        text-align: center;
+        border: 1px;
+        border-style: solid;
+    }
+}
 a {
     font-size: 1em;
     text-decoration: none;
     padding: 1em;
     background-color: aquamarine;
 }
-
 
 .a-link {
     text-decoration: underline;
