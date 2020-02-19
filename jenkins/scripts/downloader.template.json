@@ -1,0 +1,539 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "downloader",
+    "annotations": {
+      "openshift.io/display-name": "Downloader",
+      "tags": "downloader",
+      "openshift.io/long-description": "Transform streaming videos",
+      "openshift.io/provider-display-name": "lacambra.tech",
+      "template.openshift.io/bindable": "false"
+    }
+  },
+  "message": "nothing to say",
+  "labels": {
+    "template": "downloader",
+    "app": "downloader"
+  },
+  "parameters": [
+    {
+      "description": "Key required to transfer file",
+      "name": "PK",
+      "required": true
+    }
+  ],
+  "objects": [
+    {
+      "apiVersion": "v1",
+      "kind": "Build",
+      "metadata": {
+        "name": "downloader",
+        "annotations": {
+          "openshift.io/build-config.name": "downloader"
+        },
+        "labels": {
+          "app": "downloader",
+          "buildconfig": "downloader",
+          "openshift.io/build-config.name": "downloader",
+          "openshift.io/build.start-policy": "Serial"
+        },
+        "namespace": "playground",
+        "ownerReferences": [
+          {
+            "apiVersion": "build.openshift.io/v1",
+            "controller": true,
+            "kind": "BuildConfig",
+            "name": "downloader",
+            "uid": "4a7d6ea5-e3aa-11e9-9f8b-ac1f6bd5d876"
+          }
+        ]
+      },
+      "spec": {
+        "nodeSelector": null,
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "downloader:latest"
+          }
+        },
+        "postCommit": {
+        },
+        "resources": {
+        },
+        "serviceAccount": "builder",
+        "source": {
+          "binary": {
+            "asFile": "downloader.war"
+          },
+          "type": "Binary"
+        },
+        "strategy": {
+          "sourceStrategy": {
+            "from": {
+              "kind": "DockerImage",
+              "name": "alacambra/downloader-build@sha256:f62419acc3bf695db5ccca12b738a64e97b917594c8883a556994e00b260fb59"
+            }
+          },
+          "type": "Source"
+        },
+        "triggeredBy": null
+      },
+      "status": {
+        "config": {
+          "kind": "BuildConfig",
+          "name": "downloader",
+          "namespace": "playground"
+        },
+        "outputDockerImageReference": "docker-registry.default.svc:5000/playground/downloader:latest"
+      }
+    },
+    {
+      "kind": "ImageStream",
+      "apiVersion": "image.openshift.io/v1",
+      "metadata": {
+        "annotations": {
+        },
+        "labels": {
+          "app": "downloader",
+          "role": "jenkins-slave",
+          "slave-label": "maven-j13"
+        },
+        "name": "oc-jenkins-slave-mvn",
+        "namespace": "playground",
+        "uid": "a9b86587-121c-11ea-9f8b-ac1f6bd5d876"
+      },
+      "spec": {
+        "lookupPolicy": {
+          "local": false
+        },
+        "tags": [
+          {
+            "annotations": null,
+            "from": {
+              "kind": "DockerImage",
+              "name": "alacambra/oc-jenkins-slave-mvn:13.0.1_9-3.6.3"
+            },
+            "generation": 2,
+            "importPolicy": {
+            },
+            "name": "13.0.1_9-3.6.3",
+            "referencePolicy": {
+              "type": "Source"
+            }
+          }
+        ]
+      },
+      "status": {
+        "dockerImageRepository": "docker-registry.default.svc:5000/downloader/oc-jenkins-slave-mvn",
+        "tags": [
+          {
+            "items": [
+              {
+                "created": "2019-11-28T20:22:24Z",
+                "dockerImageReference": "alacambra/oc-jenkins-slave-mvn@sha256:5ba2a8a8b30900348ff8ac7f8c6d6042b98d4273828781f90df774406018947a",
+                "generation": 2,
+                "image": "sha256:5ba2a8a8b30900348ff8ac7f8c6d6042b98d4273828781f90df774406018947a"
+              }
+            ],
+            "tag": "13.0.1_9-3.6.3"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "BuildConfig",
+      "apiVersion": "build.openshift.io/v1",
+      "metadata": {
+        "annotations": {
+          "openshift.io/generated-by": "OpenShiftNewApp"
+        },
+        "labels": {
+          "app": "downloader"
+        },
+        "name": "downloader",
+        "namespace": "playground",
+        "uid": "4a7d6ea5-e3aa-11e9-9f8b-ac1f6bd5d876"
+      },
+      "spec": {
+        "failedBuildsHistoryLimit": 5,
+        "nodeSelector": null,
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "downloader:latest"
+          }
+        },
+        "postCommit": {
+        },
+        "resources": {
+        },
+        "runPolicy": "Serial",
+        "source": {
+          "binary": {
+          },
+          "type": "Binary"
+        },
+        "strategy": {
+          "sourceStrategy": {
+            "from": {
+              "kind": "ImageStreamTag",
+              "name": "downloader-build:latest"
+            }
+          },
+          "type": "Source"
+        },
+        "successfulBuildsHistoryLimit": 5,
+        "triggers": [
+          {
+            "imageChange": {
+              "lastTriggeredImageID": "alacambra/downloader-build@sha256:f62419acc3bf695db5ccca12b738a64e97b917594c8883a556994e00b260fb59"
+            },
+            "type": "ImageChange"
+          },
+          {
+            "type": "ConfigChange"
+          },
+          {
+            "github": {
+              "secret": "0EFPDb_D44UtoSx008tu"
+            },
+            "type": "GitHub"
+          },
+          {
+            "generic": {
+              "secret": "gDtE70XFhtZr_lmIPass"
+            },
+            "type": "Generic"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "annotations": {
+        },
+        "name": "downloader-build",
+        "namespace": "playground"
+      },
+      "spec": {
+        "lookupPolicy": {
+          "local": false
+        },
+        "tags": [
+          {
+            "annotations": {
+              "tags": "builder"
+            },
+            "from": {
+              "kind": "DockerImage",
+              "name": "alacambra/downloader-build:1.7"
+            },
+            "importPolicy": {
+            },
+            "name": "latest",
+            "referencePolicy": {
+              "type": "Source"
+            }
+          }
+        ]
+      },
+      "status": {
+        "dockerImageRepository": "docker-registry.default.svc:5000/downloader/downloader-build",
+        "tags": [
+          {
+            "items": [
+              {
+                "dockerImageReference": "alacambra/downloader-build@sha256:f62419acc3bf695db5ccca12b738a64e97b917594c8883a556994e00b260fb59",
+                "image": "sha256:f62419acc3bf695db5ccca12b738a64e97b917594c8883a556994e00b260fb59"
+              }
+            ],
+            "tag": "latest"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "labels": {
+          "app": "downloader"
+        },
+        "name": "downloader",
+        "namespace": "playground"
+      },
+      "spec": {
+        "lookupPolicy": {
+          "local": false
+        },
+        "tags": [
+          {
+            "annotations": null,
+            "from": {
+              "kind": "DockerImage",
+              "name": "alacambra/downloader:1.7"
+            },
+            "importPolicy": {
+            },
+            "name": "latest",
+            "referencePolicy": {
+              "type": "Source"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "kind": "BuildConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "labels": {
+          "app": "deploy-downloader"
+        },
+        "name": "deploy-downloader",
+        "namespace": "playground"
+      },
+      "spec": {
+        "nodeSelector": null,
+        "output": {
+        },
+        "postCommit": {
+        },
+        "resources": {
+          "requests": {
+            "cpu": "2000Mi",
+            "memory": "1G"
+          }
+        },
+        "runPolicy": "Parallel",
+        "source": {
+          "git": {
+            "ref": "master",
+            "uri": "https://github.com/alacambra/youtubedl-java-api.git"
+          },
+          "type": "Git"
+        },
+        "strategy": {
+          "jenkinsPipelineStrategy": {
+            "jenkinsfilePath": "jenkins/deploy.oc.Jenkinsfile"
+          },
+          "type": "JenkinsPipeline"
+        },
+        "triggers": [
+        ]
+      }
+    },
+    {
+      "apiVersion": "apps.openshift.io/v1",
+      "kind": "DeploymentConfig",
+      "metadata": {
+        "annotations": {
+          "openshift.io/generated-by": "OpenShiftNewApp"
+        },
+        "creationTimestamp": "2019-09-23T22:06:02Z",
+        "generation": 60,
+        "labels": {
+          "app": "downloader"
+        },
+        "name": "downloader",
+        "namespace": "playground",
+        "selfLink": "/apis/apps.openshift.io/v1/namespaces/downloader/deploymentconfigs/downloader",
+        "uid": "54f56986-de4e-11e9-a51f-ac1f6bd5d876"
+      },
+      "spec": {
+        "replicas": 1,
+        "revisionHistoryLimit": 10,
+        "selector": {
+          "app": "downloader",
+          "deploymentconfig": "downloader"
+        },
+        "strategy": {
+          "activeDeadlineSeconds": 21600,
+          "resources": {
+          },
+          "rollingParams": {
+            "intervalSeconds": 1,
+            "maxSurge": "25%",
+            "maxUnavailable": "25%",
+            "timeoutSeconds": 600,
+            "updatePeriodSeconds": 1
+          },
+          "type": "Rolling"
+        },
+        "template": {
+          "metadata": {
+            "annotations": {
+              "openshift.io/generated-by": "OpenShiftNewApp"
+            },
+            "creationTimestamp": null,
+            "labels": {
+              "app": "downloader",
+              "deploymentconfig": "downloader"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "env": [
+                  {
+                    "name": "DOWNLOADER_SSH_PROPERTIES",
+                    "value": "/opt/downloder/config/transfer.sftp.properties"
+                  },
+                  {
+                    "name": "DOWNLOADER_TRANSFER_PROPERTIES",
+                    "value": "/opt/downloder/config/transfer.sftp.properties"
+                  }
+                ],
+                "image": "docker-registry.default.svc:5000/playground/downloader@sha256:8c551757f3f1538eee2fc4d9ef7adcc4df418244b747356718f2aa283ca11620",
+                "imagePullPolicy": "Always",
+                "livenessProbe": {
+                  "failureThreshold": 3,
+                  "httpGet": {
+                    "path": "/downloader/views/download/job/",
+                    "port": 8080,
+                    "scheme": "HTTP"
+                  },
+                  "periodSeconds": 10,
+                  "successThreshold": 1,
+                  "timeoutSeconds": 60
+                },
+                "name": "downloader",
+                "ports": [
+                  {
+                    "containerPort": 8080,
+                    "protocol": "TCP"
+                  }
+                ],
+                "readinessProbe": {
+                  "failureThreshold": 3,
+                  "httpGet": {
+                    "path": "/downloader/views/download/job/",
+                    "port": 8080,
+                    "scheme": "HTTP"
+                  },
+                  "periodSeconds": 10,
+                  "successThreshold": 1,
+                  "timeoutSeconds": 60
+                },
+                "resources": {
+                  "limits": {
+                    "cpu": "4"
+                  }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                  {
+                    "mountPath": "/opt/app-root/src/settings",
+                    "name": "volume-zqxkh"
+                  },
+                  {
+                    "mountPath": "/opt/downloder/config",
+                    "name": "volume-wrkdd"
+                  },
+                  {
+                    "mountPath": "/opt/downloder/.ssh",
+                    "name": "volume-6r2t2"
+                  }
+                ]
+              }
+            ],
+            "dnsPolicy": "ClusterFirst",
+            "restartPolicy": "Always",
+            "schedulerName": "default-scheduler",
+            "securityContext": {
+            },
+            "terminationGracePeriodSeconds": 30,
+            "volumes": [
+              {
+                "configMap": {
+                  "defaultMode": 420,
+                  "name": "downloader-transfer-params"
+                },
+                "name": "volume-zqxkh"
+              },
+              {
+                "configMap": {
+                  "defaultMode": 420,
+                  "name": "downloader-transfer-params"
+                },
+                "name": "volume-wrkdd"
+              },
+              {
+                "name": "volume-6r2t2",
+                "secret": {
+                  "defaultMode": 420,
+                  "secretName": "downloader-private"
+                }
+              }
+            ]
+          }
+        },
+        "test": false,
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          },
+          {
+            "imageChangeParams": {
+              "containerNames": [
+                "downloader"
+              ],
+              "from": {
+                "kind": "ImageStreamTag",
+                "name": "downloader:latest",
+                "namespace": "playground"
+              }
+            },
+            "type": "ImageChange"
+          }
+        ]
+      },
+      "status": {
+        "availableReplicas": 1,
+        "details": {
+          "causes": [
+            {
+              "type": "ImageChange"
+            }
+          ]
+        },
+        "replicas": 1
+      }
+    },
+    {
+      "kind": "ConfigMap",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "downloader-transfer-params",
+        "namespace": "playground"
+      },
+      "labels": {
+        "template": "downloader",
+        "app": "downloader"
+      },
+      "data": {
+        "transfer.sftp.properties": ""
+      }
+    },
+    {
+      "kind": "Secret",
+      "apiVersion": "v1",
+      "labels": {
+        "template": "downloader",
+        "app": "downloader"
+      },
+      "data": {
+        "downloader.private": "${PK}"
+      },
+      "metadata": {
+        "name": "downloader-private",
+        "namespace": "playground"
+      },
+      "type": "Opaque"
+    }
+  ]
+}
