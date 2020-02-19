@@ -39,5 +39,22 @@ pipeline{
                 }
             }
         }
+
+        stage('deploy') {
+            steps {
+                script {
+                    openshift.withCluster() {
+                        openshift.withProject() {
+                            def rm = openshift.selector("dc", applicationName).rollout().latest()
+                                timeout(5) {
+                                    openshift.selector("dc", applicationName).related('pods').untilEach(1) {
+                                        return (it.object().status.phase == "Running")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
