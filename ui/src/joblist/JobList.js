@@ -1,16 +1,18 @@
 import {JobClient} from "../remote/DataClient.js";
+import {Templates} from "../TemplateProvider.js";
 
 export class JobList extends HTMLElement {
 
     constructor() {
         super();
-        this.jobClient = new JobClient();
         this.loadElements();
         console.info(this.innerText)
     }
 
-    loadElements() {
-        this.listTpl = document.querySelector('#downloadListTpl');
+    async loadElements() {
+
+        const template = await Templates.loadTemplate("joblist/job-list.tpl.html");
+        this.listTpl = template.querySelector('#downloadListTpl');
         this.button = document.createElement("button");
         this.button.innerText = "click";
         this.jobs = document.createElement("div");
@@ -21,7 +23,7 @@ export class JobList extends HTMLElement {
     }
 
     fetchJobs() {
-        this.jobClient.getCurrentJobs().then(j => this.renderJobs(j));
+        JobClient.getCurrentJobs().then(j => this.renderJobs(j));
     }
 
     renderJobs(jobs) {

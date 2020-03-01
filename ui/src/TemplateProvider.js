@@ -1,32 +1,32 @@
-export class TplProvider {
+const cache = {};
 
-    constructor() {
-        console.log("building.... " + new Date());
+export let Templates = {
+    loadTemplate: (templateName) => {
+
+        const request = new XMLHttpRequest();
+        return new Promise(function (resolve, reject) {
+
+            if (cache.hasOwnProperty(templateName)) {
+                resolve(cache[templateName]);
+            } else {
+                request.open('GET', templateName, true);
+                request.addEventListener('load', (event) => {
+
+                    if (event.target.status >= 400) {
+
+                        const r = {"status": event.target.status, "text": event.target.statusText};
+                        reject(r);
+
+                    } else {
+                        const tpl = event.target.response;
+                        const templates = document.createElement('div');
+                        templates.innerHTML = tpl;
+                        cache[templateName] = templates;
+                        resolve(templates);
+                    }
+                });
+                request.send();
+            }
+        });
     }
-
-    load() {
-        let c = document.querySelector("#formcomponent")
-        this.tpl = c.content.cloneNode(true);
-        this.mustacheTpl = document.querySelector("#formcomponentWithMustache").cloneNode(true);
-    }
-
-    downloadTemplates() {
-        fetch("templates.js")
-            .then(response => response.text())
-            .then(t => {
-                let wrapper = document.createElement('div');
-                wrapper.innerHTML = t;
-                document.querySelector("body").appendChild(wrapper);
-            })
-    }
-
-    cloneTpl() {
-        return this.tpl.cloneNode(true);
-    }
-
-    cloneMustacheTpl() {
-        return this.mustacheTpl.cloneNode(true);
-    }
-}
-
-export let tplProvider = new TplProvider();
+};

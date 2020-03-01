@@ -1,20 +1,20 @@
-import {DataClient} from "../remote/DataClient.js"
-
-const processResponse = Symbol('processResponse');
+import {Templates} from "../TemplateProvider.js";
+import {DataClient} from "../remote/DataClient.js";
 
 export class DownloaderForm extends HTMLElement {
 
     constructor() {
         super();
         console.log("Init DownloadFrom Controller");
-        this.client = new DataClient();
         this.connected = false;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
 
         if (!this.connected) {
-            const template = document.querySelector('#downloaderForm');
+            this.connected = true;
+            const templates = await Templates.loadTemplate("download/downloader-form.tpl.html");
+            const template = templates.querySelector('#downloaderForm');
             const owners = this.getAttribute('owners');
             const checked = this.getAttribute('checked');
             const node = document.importNode(template.content, true);
@@ -26,7 +26,7 @@ export class DownloaderForm extends HTMLElement {
             button.addEventListener("click", () => this.beginJob().then(""));
 
             this.appendChild(node);
-            this.connected = true;
+
         }
     }
 
@@ -37,7 +37,7 @@ export class DownloaderForm extends HTMLElement {
         payload.extractAudio = document.querySelector('input[name=extractAudio]').checked || false;
 
         console.log("sending payload...", payload);
-        return this.client.sendJob(payload).then(jobInfo => console.log(jobInfo));
+        return DataClient.sendJob(payload).then(jobInfo => console.log(jobInfo));
     }
 }
 
@@ -49,16 +49,21 @@ class DownloaderOwner extends HTMLElement {
         this.connected = false;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
+
         if (!this.connected) {
-            const template = document.querySelector('#owner-option');
-            const node = document.importNode(template.content, true);
+
+            this.connected = true;
+            const templates = await Templates.loadTemplate("download/owner.tpl.html");
+            const template = templates.querySelector('#owner-option');
             const checked = this.getAttribute('checked');
             const owners = this.getAttribute('owners');
 
             owners.split(",").map(owner => {
+
                 const node = document.importNode(template.content, true);
                 const input = node.querySelector('input');
+
                 input.setAttribute("value", owner);
 
                 if (checked === owner) {
@@ -69,10 +74,10 @@ class DownloaderOwner extends HTMLElement {
                 span.innerHTML = owner;
 
                 return node;
+
             }).forEach(owner => {
                 this.appendChild(owner);
             });
-            this.connected = true;
         }
     }
 }

@@ -1,0 +1,22 @@
+<template id="downloaderForm">
+  <div class="form">
+    <div class="input-group mb-3">
+      <div class="input-group-append">
+        <div class="input-group-text">
+          <span type="text">URL</span>
+        </div>
+      </div>
+      <input type="text" class="form-control" name="url" id="url"/><br>
+    </div>
+    <div class="input-group mb-3">
+      <div class="input-group-append">
+        <div class="input-group-text">
+          <input type="checkbox" name="extractAudio" id="extractAudio">
+        </div>
+      </div>
+      <span type="text" class="form-control">Només so</span>
+    </div>
+    <downloader-owner></downloader-owner>
+    <button value="download">Start job</button>
+  </div>
+</template>

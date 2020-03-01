@@ -4,7 +4,6 @@ export class AppNav extends HTMLElement {
 
     constructor() {
         super();
-        this.client = new DataClient();
     }
 
     connectedCallback() {
@@ -14,7 +13,7 @@ export class AppNav extends HTMLElement {
 
         const clear = this.querySelector("#clearFinishedJobs");
         clear.addEventListener("click", e => {
-            return this.client.cleanJobs();
+            return DataClient.cleanJobs();
         });
     }
 

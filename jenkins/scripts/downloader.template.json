@@ -21,6 +21,11 @@
       "description": "Key required to transfer file",
       "name": "PK",
       "required": true
+    },
+    {
+      "description": "Folder config",
+      "name": "CONFIG",
+      "required": true
     }
   ],
   "objects": [
@@ -516,7 +521,7 @@
         "app": "downloader"
       },
       "data": {
-        "transfer.sftp.properties": ""
+        "transfer.sftp.properties": "${CONFIG}"
       }
     },
     {

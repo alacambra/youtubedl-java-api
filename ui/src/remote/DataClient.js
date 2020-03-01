@@ -2,7 +2,7 @@ import {HttpClient} from "./HttpClient.js"
 
 const processResponse = Symbol('processResponse');
 
-export class DataClient {
+export const DataClient = new class DataClient {
 
     constructor() {
         this.httpClient = new HttpClient();
@@ -20,9 +20,9 @@ export class DataClient {
     [processResponse](response) {
         response.text().then(b => console.log(b));
     }
-}
+};
 
-export class JobClient {
+export const JobClient = new class JobClient {
 
     constructor() {
         this.httpClient = new HttpClient();
@@ -56,4 +56,4 @@ export class JobClient {
         return fileName[0];
     }
 
-}
+};
