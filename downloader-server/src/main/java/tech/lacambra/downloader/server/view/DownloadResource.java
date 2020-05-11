@@ -62,9 +62,11 @@ public class DownloadResource {
   @GET
   @Path("job/{id}")
   public JsonObject getJob(@PathParam("id") String id) {
-    var result = downloadService.getDownloadJob(id)
+
+    DownloadResult result = downloadService.getDownloadJob(id)
         .map(DownloadJob::getResult)
-        .orElse(new DownloadResult(-9999, false, 0f, "NOT_FOUND", "", null));
+        .orElse(new DownloadResult(id, -9999, false, 0f, "NOT_FOUND", "", null));
+
     LOGGER.info("[getJob] got job:" + result.getJson());
     return result.getJson();
   }
@@ -75,7 +77,7 @@ public class DownloadResource {
     return downloadService
         .getDownloadJobs()
         .stream()
-        .sorted(Comparator.comparingLong(DownloadJob::getTime))
+        .sorted(Comparator.comparingLong(j -> j.getTime() * -1l))
         .map(DownloadJob::getResult)
         .map(DownloadResult::getJson)
         .collect(JsonCollectors.toJsonArray());
@@ -100,7 +102,7 @@ public class DownloadResource {
     return downloadService
         .getDownloadJobs()
         .stream()
-        .sorted(Comparator.comparingLong(DownloadJob::getTime))
+        .sorted(Comparator.comparingLong(j -> j.getTime() * -1l))
         .map(DownloadJob::getResult)
         .map(DownloadResult::getJson)
         .collect(JsonCollectors.toJsonArray());

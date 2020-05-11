@@ -17,6 +17,10 @@ export const DataClient = new class DataClient {
         return this.httpClient.delete("../views/download/job/finished");
     }
 
+    getJob(jobId) {
+        return this.httpClient.getData(`../views/download/job/${jobId}`);
+    }
+
     [processResponse](response) {
         response.text().then(b => console.log(b));
     }

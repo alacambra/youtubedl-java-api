@@ -105,7 +105,7 @@ public class DownloadService {
 
   private DownloadJob cloneForDone(int code, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, true, 100.0f, "DONE", job.getResult().getShellNotification(), job.getDownloadJobInfo()),
+        new DownloadResult(job.getId(), code, true, 100.0f, "DONE", job.getResult().getShellNotification(), job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()
@@ -114,7 +114,7 @@ public class DownloadService {
 
   private DownloadJob cloneForError(int code, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, true, -1f, "ERROR", "", job.getDownloadJobInfo()),
+        new DownloadResult(job.getId(), code, true, -1f, "ERROR", "", job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()
@@ -123,7 +123,7 @@ public class DownloadService {
 
   private DownloadJob cloneForDLInProgress(int code, float progress, String line, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, false, progress, "DL_IN_PROGRESS", line, job.getDownloadJobInfo()),
+        new DownloadResult(job.getId(), code, false, progress, "DL_IN_PROGRESS", line, job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()
@@ -132,7 +132,7 @@ public class DownloadService {
 
   private DownloadJob cloneForTXInProgress(int code, float progress, DownloadJob job) {
     return new DownloadJob(job.getId(),
-        new DownloadResult(code, false, progress, "TR_IN_PROGRESS", job.getResult().getShellNotification() + "\nCopying....", job.getDownloadJobInfo()),
+        new DownloadResult(job.getId(), code, false, progress, "TR_IN_PROGRESS", job.getResult().getShellNotification() + "\nCopying....", job.getDownloadJobInfo()),
         job.getDisposable(),
         job.getTargetFolder(),
         job.getDownloadJobInfo()

@@ -7,6 +7,7 @@ export class DownloaderForm extends HTMLElement {
         super();
         console.log("Init DownloadFrom Controller");
         this.connected = false;
+        this.currentTimer = undefined;
     }
 
     async connectedCallback() {
@@ -25,8 +26,8 @@ export class DownloaderForm extends HTMLElement {
             const button = node.querySelector("button");
             button.addEventListener("click", () => this.beginJob().then(""));
 
+            this.currentJob = node.getElementById("jobStatus");
             this.appendChild(node);
-
         }
     }
 
@@ -37,7 +38,25 @@ export class DownloaderForm extends HTMLElement {
         payload.extractAudio = document.querySelector('input[name=extractAudio]').checked || false;
 
         console.log("sending payload...", payload);
-        return DataClient.sendJob(payload).then(jobInfo => console.log(jobInfo));
+        return DataClient.sendJob(payload)
+            .then(jobInfo => {
+                if (this.currentTimer !== undefined) {
+                    clearInterval(this.currentTimer);
+                }
+
+                this.currentTimer = setInterval(_ => DataClient.getJob(jobInfo.id)
+                    .then(j => {
+                        if (j.status === "DONE") {
+                            clearInterval(this.currentTimer);
+                            this.currentTimer = undefined;
+                        }
+                        this.setResult(j);
+                    }), 1000);
+            });
+    }
+
+    setResult(job) {
+        this.currentJob.innerHTML = job.jobId + " : " + job.status;
     }
 }
 

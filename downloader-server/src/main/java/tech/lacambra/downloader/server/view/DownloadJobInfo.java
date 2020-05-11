@@ -44,6 +44,11 @@ public class DownloadJobInfo {
   }
 
   public String getUrl() {
+
+    if (url == null) {
+      return "";
+    }
+
     return url;
   }
 
@@ -52,6 +57,11 @@ public class DownloadJobInfo {
   }
 
   public String getOwner() {
+
+    if (owner == null) {
+      return "";
+    }
+
     return owner;
   }
 
@@ -65,9 +75,9 @@ public class DownloadJobInfo {
 
   public JsonObject toJson() {
     return Json.createObjectBuilder()
-        .add("url", url)
+        .add("url", getUrl())
         .add("extractAudio", getExtractAudio())
-        .add("owner", owner)
+        .add("owner", getOwner())
         .build();
   }
 

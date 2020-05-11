@@ -28,9 +28,6 @@ public class SftpClient {
         System.out.println(o);
       }
 
-//      channelSftp.put(
-//          Files.newInputStream(Paths.get("/Users/albertlacambra/git/lacambra.tech/downloader/Hora 25 (20_12_2019 - Tramo de 21_00 a 22_00).mp3")),
-//          "/music/downloader/hannah/test.mp3");
     } catch (SftpException
 //        |
 //        IOException

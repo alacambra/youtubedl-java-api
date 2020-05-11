@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 public class DownloadResult {
 
+  private String jobId;
   private Integer exitCode;
   private boolean done;
   private Float progress;
@@ -16,7 +17,8 @@ public class DownloadResult {
   private String shellNotification;
   private DownloadJobInfo downloadJobInfo;
 
-  public DownloadResult(Integer exitCode, boolean done, Float progress, String status, String shellNotification, DownloadJobInfo downloadJobInfo) {
+  public DownloadResult(String jobId, Integer exitCode, boolean done, Float progress, String status, String shellNotification, DownloadJobInfo downloadJobInfo) {
+    this.jobId = jobId;
     this.exitCode = exitCode;
     this.done = done;
     this.progress = progress;
@@ -34,6 +36,7 @@ public class DownloadResult {
     if (exitCode == null) exitCode = -9999;
 
     return Json.createObjectBuilder()
+        .add("jobId", jobId)
         .add("exitCode", exitCode)
         .add("line", Stream.of(shellNotification.split("\n")).collect(Collector.of(
             Json::createArrayBuilder,
@@ -47,20 +50,8 @@ public class DownloadResult {
         .build();
   }
 
-  public Float getProgress() {
-    return progress;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
   public String getShellNotification() {
     return shellNotification;
-  }
-
-  public DownloadJobInfo getDownloadJobInfo() {
-    return downloadJobInfo;
   }
 
   public boolean isDone() {
